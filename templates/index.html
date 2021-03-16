@@ -11,22 +11,19 @@
 		<input type="text" placeholder="Player Two" name="p2" class="names">
 		<input type="text" placeholder="Surface" name="surface" id="surface">
 		<input type="text" placeholder="Location" name="location" id="location">
+        <input type="text" placeholder="Year" name="year" id = "year">
 		<input type="submit" value = 'Submit'>
 	</form>
 </div>
 <script type="text/javascript">
 	$( function() {
-    var names = {{ names | safe }};
-    var surface = {{ surface | safe }};
-    var locations = {{ locations | safe }};
-    $( "#surface" ).autocomplete({
-    	source: surface
-    })
-    $( ".names" ).autocomplete({
-    	source: names
+        var names = {{ names | safe }};
+        var surface = {{ surface | safe }};
+        var locations = {{ locations | safe }};
+        var years = {{ years | safe }};
+        $( "#surface" ).autocomplete({ source: surface });
+        $( ".names" ).autocomplete({ source: names });
+        $( "#location" ).autocomplete({ source: locations });
+        $( "#year" ).autocomplete({ source: years });
     });
-    $( "#location" ).autocomplete({
-    	source: locations
-    })
-  } );
 </script>

@@ -1,0 +1,7 @@
+- Better UI.
+- Turn all names into links (https://stackoverflow.com/questions/6180256/post-from-an-a-tag) to lead to individual player pages.
+- Turn all tournament names, years, and surfaces into links as above ^
+
+
+
+- H2H Average Games per Set each player

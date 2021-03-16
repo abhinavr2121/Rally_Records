@@ -23,7 +23,8 @@ def main_root():
 	return render_template('index.html', 
 							names = names, 
 							surface = ['Hard', 'Clay', 'Grass', 'Carpet'],
-							locations = locations)
+							locations = locations,
+							years = str(list(range(2005, 2022))))
 
 @app.route('/results', methods = ['POST', 'GET'])
 def get_results():
@@ -33,25 +34,27 @@ def get_results():
 		p2 = request.form.get('p2').capitalize()
 		surface = request.form.get('surface').capitalize()
 		location = request.form.get('location').capitalize()
+		years = request.form.get('year')
 		query = None
-		if len(p1) > 0 and len(p2) > 0:
+		if len(p1) > 0 and len(p2) > 0: # two players
 			query = {'$and': [{'Winner': {'$regex': p1 + '|' + p2, '$options': 'i'}},
 							  {'Loser': {'$regex': p1 + '|' + p2, '$options': 'i'}},
 							  {'Surface': {'$regex': surface,'$options': 'i'}},
-							  {'Location': {'$regex': location, '$options': 'i'}}]}
+							  {'Location': {'$regex': location, '$options': 'i'}},
+							  {'Date': {'$regex': '.*' + years + '.*', '$options': 'i'}}]}
 			route = 1
-		elif len(p1) > 0 and len(p2) == 0 and len(surface) == 0:
+		elif len(p1) > 0 and len(p2) == 0: # one player
 			query = {'$and': [{'$or': [{'Winner': {'$regex': '.*' + p1 + '.*', '$options': 'i'}},
 							 {'Loser': {'$regex': '.*' + p1 + '.*', '$options': 'i' }}]},
-							 {'Surface': {'$regex': surface}},
-							 {'Location': {'$regex': location, '$options': 'i'}}]}
+							 {'Surface': {'$regex': surface, '$options': 'i'}},
+							 {'Location': {'$regex': location, '$options': 'i'}},
+							 {'Date': {'$regex': '.*' + years + '.*', '$options': 'i'}}]}
 			route = 2
-		elif len(p1) == 0 and len(p2) == 0 and len(surface) == 0 and len(location) > 0:
-			query = {'$and': [{'Location': {'$regex': location, '$options': 'i'}}]}
+		elif len(p1) == 0 and len(p2) == 0 and (len(surface) > 0 or len(location) > 0 or len(years) > 0):
+			query = {'$and': [{'Surface': {'$regex': surface}},
+							  {'Location': {'$regex': location}},
+							  {'Date': {'$regex': '.*' + years + '.*', '$options': 'i'}}]}
 			route = 3
-		elif len(p1) == 0 and len(p2) == 0 and len(surface) > 0:
-			query = {'$and': [{'Surface': {'$regex': surface}}]}
-			route = 4
 
 		results = pd.DataFrame(list(collection.find(query)))
 		results['Date'] = pd.to_datetime(results['Date'], format = '%m/%d/%Y')
@@ -59,34 +62,42 @@ def get_results():
 		results['Date'] = results['Date'].dt.strftime('%m/%d/%Y')
 
 		if route == 1:
+			print('Route1')
 			return render_template('results1.html', 
 									data = results, 
 									name1 = p1, 
 									name2 = p2, 
+									surface = surface,
+									location = location,
+									year = years,
+									years = map(str, range(2005, 2022)),
 									np = np,
 									p1 = results[results['Winner'].str.upper().str.contains(p1.upper())],
 									p2 = results[results['Winner'].str.upper().str.contains(p2.upper())])
 		elif route == 2:
+			print('Route2')
 			return render_template('results2.html', 
 									data = results,
 									name1 = p1,
 									np = np,
 									pd = pd,
+									location = location,
+									year = years,
+									years = map(str, range(2005, 2022)),
+									surface = surface,
 									p1_win = results[results['Winner'].str.upper().str.contains(p1.upper())],
 									p1_loss = results[results['Loser'].str.upper().str.contains(p1.upper())])
 		elif route == 3:
-			return render_template('results3.html', 
-									data = results,
-									location = location,
-									np = np,
-									pd = pd,
-									location_sub = results[results['Location'].str.upper().str.contains(location.upper())])
-		elif route == 4:
-			return render_template('results4.html',
+			print('Route3')
+			return render_template('results3.html',
 									data = results,
 									surface = surface,
+									location = location,
+									year = years,
+									years = map(str, range(2005, 2022)),
 									np = np,
-									pd = pd,
-									surface_sub = results[results['Surface'].str.upper().str.contains(surface.upper())])
+									pd = pd)
+		else:
+			return render_template('404.html')
 	else:
 		return 'gotted'

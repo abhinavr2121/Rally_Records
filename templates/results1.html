@@ -5,10 +5,23 @@
 	</head>
 	<body>
 		<a href='/'>Back</a>
-		<h1>{{name1}} || {{name2}}</h1>
+		<h1>{{name1.upper()}} || {{name2.upper()}} 
+			{%if surface | length > 0:%}
+				/ {{surface.upper()}}
+			{%endif%}
+			{%if location |length > 0:%}
+				/ {{location.upper()}}
+			{%endif%}
+			{%if year | length > 0:%}
+				/ {{year}}
+			{%endif%}
+		</h1>
 		<h2>{{p1 | length}} || {{p2 | length}}</h2>
-		<canvas id="surface"></canvas>
-		<canvas id="time_wins"></canvas>
+
+		<div>
+			<canvas id="surface"></canvas>
+			<canvas id="time_wins"></canvas>
+		</div>
 		<table>
 			<th>
 				<tr>
@@ -18,6 +31,7 @@
 					<td>Surface</td>
 					<td>Court</td>
 					<td>Score</td>
+					<td>Round</td>
 				</tr>
 			</th>
 			<tbody>
@@ -28,7 +42,8 @@
 					<td>{{doc['Winner']}}  {{doc['WRank']}}<br>{{doc['Loser']}}  {{doc['LRank']}} {% if doc['Comment'] == 'Retired'%} (Ret.) {% endif %}</td>
 					<td>{{doc['Surface']}}</td>
 					<td>{{doc['Court']}}</td>
-					<td>{{doc['W1']}}  {{doc['W2']}}  {{doc['W3']}}<br>{{doc['L1']}}  {{doc['L2']}}  {{doc['L3']}}</td>
+					<td>{{doc['W1']}}  {{doc['W2']}}  {{doc['W3']}}  {{doc['W4']}}  {{doc['W5']}}<br>{{doc['L1']}}  {{doc['L2']}}  {{doc['L3']}}  {{doc['L4']}} {{doc['L5']}}</td>
+					<td>{{doc['Round']}}</td>
 				</tr>
 				{% endfor %}
 			</tbody>
@@ -102,91 +117,13 @@
 			  	datasets: [{
 			  		label: '{{name1.upper()}}',
 			    	data: [
-			    		{%if p1[p1['Date'].str[-4:] == '2005'] | length > 0 %}
-			    			{{p1[p1['Date'].str[-4:] == '2005']  | length}},
-			    		{%else%}
-			    			0,
-			    		{%endif%}
-			    		{%if p1[p1['Date'].str[-4:] == '2006'] | length > 0 %}
-			    			{{p1[p1['Date'].str[-4:] == '2006']  | length}},
-			    		{%else%}
-			    			0,
-			    		{%endif%}
-			    		{%if p1[p1['Date'].str[-4:] == '2007'] | length > 0 %}
-			    			{{p1[p1['Date'].str[-4:] == '2007']  | length}},
-			    		{%else%}
-			    			0,
-			    		{%endif%}
-			    		{%if p1[p1['Date'].str[-4:] == '2008'] | length > 0 %}
-			    			{{p1[p1['Date'].str[-4:] == '2008']  | length}},
-			    		{%else%}
-			    			0,
-			    		{%endif%}
-			    		{%if p1[p1['Date'].str[-4:] == '2009'] | length > 0 %}
-			    			{{p1[p1['Date'].str[-4:] == '2009']  | length}},
-			    		{%else%}
-			    			0,
-			    		{%endif%}
-			    		{%if p1[p1['Date'].str[-4:] == '2010'] | length > 0 %}
-			    			{{p1[p1['Date'].str[-4:] == '2010']  | length}},
-			    		{%else%}
-			    			0,
-			    		{%endif%}
-			    		{%if p1[p1['Date'].str[-4:] == '2011'] | length > 0 %}
-			    			{{p1[p1['Date'].str[-4:] == '2011']  | length}},
-			    		{%else%}
-			    			0,
-			    		{%endif%}
-			    		{%if p1[p1['Date'].str[-4:] == '2012'] | length > 0 %}
-			    			{{p1[p1['Date'].str[-4:] == '2012']  | length}},
-			    		{%else%}
-			    			0,
-			    		{%endif%}
-			    		{%if p1[p1['Date'].str[-4:] == '2013'] | length > 0 %}
-			    			{{p1[p1['Date'].str[-4:] == '2013']  | length}},
-			    		{%else%}
-			    			0,
-			    		{%endif%}
-			    		{%if p1[p1['Date'].str[-4:] == '2014'] | length > 0 %}
-			    			{{p1[p1['Date'].str[-4:] == '2014']  | length}},
-			    		{%else%}
-			    			0,
-			    		{%endif%}
-			    		{%if p1[p1['Date'].str[-4:] == '2015'] | length > 0 %}
-			    			{{p1[p1['Date'].str[-4:] == '2015']  | length}},
-			    		{%else%}
-			    			0,
-			    		{%endif%}
-			    		{%if p1[p1['Date'].str[-4:] == '2016'] | length > 0 %}
-			    			{{p1[p1['Date'].str[-4:] == '2016']  | length}},
-			    		{%else%}
-			    			0,
-			    		{%endif%}
-			    		{%if p1[p1['Date'].str[-4:] == '2017'] | length > 0 %}
-			    			{{p1[p1['Date'].str[-4:] == '2017']  | length}},
-			    		{%else%}
-			    			0,
-			    		{%endif%}
-			    		{%if p1[p1['Date'].str[-4:] == '2018'] | length > 0 %}
-			    			{{p1[p1['Date'].str[-4:] == '2018']  | length}},
-			    		{%else%}
-			    			0,
-			    		{%endif%}
-			    		{%if p1[p1['Date'].str[-4:] == '2019'] | length > 0 %}
-			    			{{p1[p1['Date'].str[-4:] == '2019']  | length}},
-			    		{%else%}
-			    			0,
-			    		{%endif%}
-			    		{%if p1[p1['Date'].str[-4:] == '2020'] | length > 0 %}
-			    			{{p1[p1['Date'].str[-4:] == '2020']  | length}},
-			    		{%else%}
-			    			0,
-			    		{%endif%}
-			    		{%if p1[p1['Date'].str[-4:] == '2021'] | length > 0 %}
-			    			{{p1[p1['Date'].str[-4:] == '2021']  | length}},
-			    		{%else%}
-			    			0,
-			    		{%endif%}
+			    		{%for i in years:%}
+				    		{%if p1[p1['Date'].str[-4:] == i] | length > 0 %}
+				    			{{p1[p1['Date'].str[-4:] == i]  | length}},
+				    		{%else%}
+				    			0,
+			    			{%endif%}
+			    		{%endfor%}
 			    		],
 			    	borderWidth: 1,
 			    	backgroundColor: 'red',
