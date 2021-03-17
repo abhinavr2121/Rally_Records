@@ -26,8 +26,10 @@ def main_root():
 							locations = locations,
 							years = str(list(range(2005, 2022))))
 
-@app.route('/results', methods = ['POST', 'GET'])
-def get_results():
+@app.route('/results/', methods = ['POST', 'GET'])
+@app.route('/results/location/<location>', methods = ['POST', 'GET'])
+@app.route('/results/player/<player>/', methods = ['POST', 'GET'])
+def get_results(player = None, location = None):
 	if request.method == 'POST':
 		route = 0
 		p1 = request.form.get('p1').capitalize()
@@ -98,6 +100,49 @@ def get_results():
 									np = np,
 									pd = pd)
 		else:
-			return render_template('404.html')
+			abort(404)
+	elif request.method == 'GET':
+		loc = location
+		p1 = player
+
+		if p1 is not None:
+			query = {'$or': [{'Winner': player}, {'Loser': player}]}
+			results = pd.DataFrame(list(collection.find(query)))
+			results['Date'] = pd.to_datetime(results['Date'], format = '%m/%d/%Y')
+			results = results.sort_values('Date', ascending = False)
+			results['Date'] = results['Date'].dt.strftime('%m/%d/%Y')
+
+			return render_template('results2.html', 
+										data = results,
+										name1 = p1,
+										np = np,
+										pd = pd,
+										years = map(str, range(2005, 2022)),
+										p1_win = results[results['Winner'].str.upper().str.contains(p1.upper())],
+										p1_loss = results[results['Loser'].str.upper().str.contains(p1.upper())])
+		elif loc is not None:
+			query = {'Location': loc}
+			results = pd.DataFrame(list(collection.find(query)))
+			results['Date'] = pd.to_datetime(results['Date'], format = '%m/%d/%Y')
+			results = results.sort_values('Date', ascending = False)
+			results['Date'] = results['Date'].dt.strftime('%m/%d/%Y')
+			return render_template('results3.html', 
+										data = results,
+										name1 = p1,
+										np = np,
+										pd = pd,
+										location = location,
+										surface = "",
+										years = map(str, range(2005, 2022)))
+
 	else:
-		return 'gotted'
+		abort(404)
+
+
+@app.errorhandler(404)
+def error_handler():
+	return render_template('404.html')
+
+@app.errorhandler(500)
+def error_handler():
+	return render_template('500.html')

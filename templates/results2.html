@@ -66,9 +66,9 @@
 			<tbody>
 				{% for index, doc in data.iterrows():%}
 				<tr>
-					<td>{{doc['Location']}}<br>({{doc['Series']}})</td>
+					<td><a href="/results/location/{{doc['Location']}}">{{doc['Location']}}</a><br>({{doc['Series']}})</td>
 					<td>{{doc['Date']}}</td>
-					<td>{{doc['Winner']}}  {{doc['WRank']}}<br>{{doc['Loser']}}  {{doc['LRank']}} {% if doc['Comment'] == 'Retired'%} (Ret.) {% endif %}</td>
+					<td><a href="/results/player/{{doc['Winner']}}">{{doc['Winner']}}</a>  {{doc['WRank']}}<br><a href="/results/player/{{doc['Loser']}}">{{doc['Loser']}}</a>  {{doc['LRank']}} {% if doc['Comment'] == 'Retired'%} (Ret.) {% endif %}</td>
 					<td>{{doc['Surface']}}</td>
 					<td>{{doc['Court']}}</td>
 					<td>{{doc['W1']}}  {{doc['W2']}}  {{doc['W3']}}  {{doc['W4']}}  {{doc['W5']}}<br>{{doc['L1']}}  {{doc['L2']}}  {{doc['L3']}}  {{doc['L4']}} {{doc['L5']}}</td>
