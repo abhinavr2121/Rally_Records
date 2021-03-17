@@ -1,0 +1,30 @@
+body, html {
+	height: 100%;
+	width: 100%;
+}
+
+input {
+	text-align: center;
+}
+
+.title {
+	text-align: center;
+	padding-top: 7%;
+	padding-bottom: 7%;
+}
+
+.carousel h4 {
+	text-align: center;
+	font-style: italic;
+	vertical-align: middle;
+}
+
+input {
+	width: 100%;
+}
+
+button {
+	margin: 0 auto;
+	width: 20%;
+	display: block !important;
+}

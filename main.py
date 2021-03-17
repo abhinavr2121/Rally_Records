@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, abort
 import pymongo
 import pandas as pd
 import json
@@ -54,7 +54,7 @@ def get_results(player = None, location = None):
 			route = 2
 		elif len(p1) == 0 and len(p2) == 0 and (len(surface) > 0 or len(location) > 0 or len(years) > 0):
 			query = {'$and': [{'Surface': {'$regex': surface}},
-							  {'Location': {'$regex': location}},
+							  {'Location': {'$regex': location, '$options': 'i'}},
 							  {'Date': {'$regex': '.*' + years + '.*', '$options': 'i'}}]}
 			route = 3
 
@@ -138,6 +138,12 @@ def get_results(player = None, location = None):
 	else:
 		abort(404)
 
+
+@app.after_request
+def add_header(response):
+    response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+    response.headers['Cache-Control'] = 'public, max-age=0'
+    return response
 
 @app.errorhandler(404)
 def error_handler():
