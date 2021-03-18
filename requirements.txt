@@ -3,4 +3,4 @@ numpy==1.18.4
 Flask==1.1.2
 pandas==1.0.3
 dnspython==2.1.0
-gunicorn=41.2.0
+gunicorn==41.2.0
