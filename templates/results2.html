@@ -5,6 +5,7 @@
 
 
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+		<link href="{{url_for('static',filename='main.css')}}?v=1.0" rel="stylesheet" type="text/css">
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
 		<script src='https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js'></script>
 	</head>
@@ -27,7 +28,8 @@
 		<div class="container mt-5">
 			<div class="row">
 				<div class="col">
-					<h1>{{name1.upper()}}</h1>
+					<h1>{{name1.upper()}}  <img src="https://www.countryflags.io/{{countries[countries['Name'].str.upper() == name1.upper()].Code.values[0]}}/flat/64.png"></h1>
+					<h3 class="text-muted">{{countries[countries['Name'].str.upper() == name1.upper()].Country.values[0]}}</h3>
 					<h3 class="text-muted">
 						{%if surface | length > 0:%}
 							{{surface.upper()}}
@@ -114,25 +116,57 @@
 			</div>
 		</div>
 
-		<table class="table table-striped table-hover mt-5">
-			<tr class="text-center">
-				<th scope="col">Tournament</th>
-				<th scope="col">Date</th>
-				<th scope="col">Match</th>
-				<th scope="col">Surface</th>
-				<th scope="col">Court</th>
-				<th scope="col">Score</th>
-				<th scope="col">Round</th>
+		<table class="table table-hover table-striped mt-5 align-middle">
+			<tr>
+				<th scope="col" class="w-10 text-center">Tournament</th>
+				<th scope="col" class="w-10 text-center">Date</th>
+				<th scope="col" class="w-25">Match</th>
+				<th scope="col" class="w-10 text-center">Surface</th>
+				<th scope="col" class="w-10 text-center">Court</th>
+				<th scope="col" class="w-25">Score</th>
+				<th scope="col" class="w-10 text-center">Round</th>
 			</tr>
 			<tbody>
 				{% for index, doc in data.iterrows():%}
 				<tr>
 					<td class="text-center"><a href="/results/location/{{doc['Location']}}">{{doc['Location']}}</a><br>({{doc['Series']}})</td>
 					<td class="text-center">{{doc['Date']}}</td>
-					<td><a href="/results/player/{{doc['Winner']}}">{{doc['Winner']}}</a>  {{doc['WRank']}}<br><a href="/results/player/{{doc['Loser']}}">{{doc['Loser']}}</a>  {{doc['LRank']}} {% if doc['Comment'] == 'Retired'%} (Ret.) {% endif %}</td>
+					<td>
+						<img src="https://www.countryflags.io/{{countries[countries['Name'].str.upper() == doc['Winner'].upper()].Code.values[0]}}/flat/24.png">
+						<a href="/results/player/{{doc['Winner']}}">{{doc['Winner']}}</a>  ({{doc['WRank']}})<br>
+						<img src="https://www.countryflags.io/{{countries[countries['Name'].str.upper() == doc['Loser'].upper()].Code.values[0]}}/flat/24.png">
+						<a href="/results/player/{{doc['Loser']}}">{{doc['Loser']}}</a>  ({{doc['LRank']}}) {% if doc['Comment'] == 'Retired'%} (Ret.) {% endif %}
+					</td>
 					<td class="text-center">{{doc['Surface']}}</td>
 					<td class="text-center">{{doc['Court']}}</td>
-					<td>{{doc['W1']}}  {{doc['W2']}}  {{doc['W3']}}  {{doc['W4']}}  {{doc['W5']}}<br>{{doc['L1']}}  {{doc['L2']}}  {{doc['L3']}}  {{doc['L4']}} {{doc['L5']}}</td>
+					<td>
+						{% for i in range(1, 6): %}
+							{% set w = 'W' ~ i %} 
+							{% set l = 'L' ~ i %}
+							{% if (doc[w] | string) | length > 0 %}
+								<div class="score text-center">
+									{% if pd.to_numeric(doc[w]) > pd.to_numeric(doc[l])%}
+										<b>{{doc[w]}}</b>
+									{% else %}
+										{{doc[w]}}
+									{% endif %}
+								</div>
+							{% endif %}
+						{% endfor %}
+						<br>
+						{% for i in range(1, 6): %}
+							{% set w = 'W' ~ i %} 
+							{% set l = 'L' ~ i %}
+							{% if (doc[l] | string) | length > 0 %}
+								<div class="score text-center">
+									{% if pd.to_numeric(doc[l]) > pd.to_numeric(doc[w])%}
+										<b>{{doc[l]}}</b>
+									{% else %}
+										{{doc[l]}}
+									{% endif %}
+								</div>
+							{% endif %}
+						{% endfor %}
 					<td class="text-center">{{doc['Round']}}</td>
 				</tr>
 				{% endfor %}
@@ -167,7 +201,7 @@
 				    		{%endif%}
 				    	],
 				    	borderWidth: 1,
-				    	backgroundColor: 'green'
+				    	backgroundColor: '#517664'
 					},
 					{
 						label: 'Losses',
@@ -187,11 +221,15 @@
 				    		{%endif%}
 				    	],
 				    	borderWidth: 1,
-				    	backgroundColor: 'red'
+				    	backgroundColor: '#F08080'
 					}]
 				},
 				options: {
 					responsive: true,
+					title: {
+						display: true,
+						text: "Record by Surface"
+					},
 					scales: {
 				    	yAxes: [{
 				    		ticks: {
@@ -209,7 +247,7 @@
 			data: 
 			{
 				labels: [
-					{%for i in range(10):%}
+					{%for i in range(6):%}
 						{%if data["Loser"].value_counts().index[i].upper() != name1.upper()%}
 						'{{data["Loser"].value_counts().index[i]}}',
 						{%endif%}
@@ -219,18 +257,22 @@
 			  		
 			  		{
 				    	data: [
-				    	{%for i in range(10):%}
+				    	{%for i in range(6):%}
 				    		{%if data["Loser"].value_counts().index[i].upper() != name1.upper()%}
 				    			{{data["Loser"].value_counts()[i]}},
 				    		{%endif%}
 				    	{%endfor%}
 				    	],
-				    	backgroundColor: 'lightgreen',
+				    	backgroundColor: '#FE8534',
 				    	borderWidth: 1,
 					},
 				],
 			},
 			options: {
+				title: {
+					display: true,
+					text: "Most Wins Against"
+				},
 				legend: {display: false},
 				responsive: true,
 				scales: {
@@ -254,22 +296,38 @@
 				  		label: 'Ranking',
 				    	data: [
 				    		{%for i in years:%}
-				    			{%if p1_win[p1_win['Date'].str[-4:] == i] | length > 0 %}
-				    				{{p1_win[p1_win['Date'].str[-4:] == i].WRank.min()}},
+				    			{% if (p1_win[p1_win['Date'].str[-4:] == i] | length > 0) or (p1_loss[p1_loss['Date'].str[-4:] == i] | length > 0) %}
+				    				{% set min_win = p1_win[p1_win['Date'].str[-4:] == i].WRank.min() %}
+				    				{% set min_loss = p1_loss[p1_loss['Date'].str[-4:] == i].LRank.min() %}
+
+				    				{% if min_win < min_loss %}
+				    					{{min_win}},
+				    				{% elif not math.isnan(min_loss)  %}
+				    					{{min_loss}},
+				    				{% else %}
+				    					NaN,
+				    				{% endif %}
 				    			{%else%}
 				    				NaN,
 				    			{%endif%}
 				    		{%endfor%}
 				    		],
 				    	borderWidth: 1,
-				    	backgroundColor: 'red',
-				    	borderColor: 'red',
+				    	backgroundColor: '#FE8534',
+				    	borderColor: '#053C5E',
 				    	lineTension: 0,
 				    	fill: false,
 					},
 					],
 				},
 				options: {
+					title: {
+						display: true,
+						text: "{{name1.upper()}} Rank over Time"
+					},
+					legend: {
+						display: false
+					},
 					responsive: true,
 					scales: {
 				    	yAxes: [{

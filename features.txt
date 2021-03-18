@@ -1,7 +1,5 @@
-- misnamed players showing up as different from original
 - wta
 - country stats
-- background image for tournament city homepage
-- bug fix ranking info (look up Delgado for evidence)
 - error handling
-- country flags
+- 'data unavailable' for unavailable scores
+- set up pipeline/verification

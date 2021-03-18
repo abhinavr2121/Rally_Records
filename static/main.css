@@ -1,11 +1,42 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto+Slab:300,700,900");
+
 body, html {
 	height: 100%;
 	width: 100%;
 	padding-bottom: 2%;
+	background-color: #F8F8FF;
+}
+
+h1 {
+	font-family: Roboto Slab;
+	font-weight: bold;
+	font-size: 3em;
 }
 
 input {
 	text-align: center;
+	outline: 0;
+	border: none;
+	border-bottom: 2px dotted #053C5E;
+	font-size: 1.2em;
+	color: #053C5E;
+	background-color: transparent;
+}
+
+.bg-primary {
+	background-color: #053C5E !important;
+}
+
+.btn-primary {
+	background-color: transparent !important;
+	color: #053C5E !important;
+	border: 3px solid #053C5E !important;
+}
+
+.btn-primary:hover {
+	background-color: #053C5E !important;
+	color: white !important;
+	border: none;
 }
 
 .title {
@@ -28,4 +59,34 @@ button {
 	margin: 0 auto;
 	width: 20%;
 	display: block !important;
+}
+
+.score {
+	margin: 1%;
+	width: 5%;
+	font-size: 0.8em;
+	background-color: white;
+	border: 1px solid black;
+	display: inline-block;
+}
+
+table .w-30 {
+	width: 30%;
+}
+
+table .w-15 {
+	width: 15%;
+}
+
+table .w-10 {
+	width: 10%;
+}
+
+table .w-5 {
+	width: 5%;
+}
+
+img {
+	position: relative;
+	top: -2px;
 }

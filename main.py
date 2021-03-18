@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, abort
 import pymongo
 import pandas as pd
 import json
+import math
 import numpy as np
 
 app = Flask(__name__)
@@ -9,6 +10,8 @@ app = Flask(__name__)
 client = pymongo.MongoClient("mongodb+srv://abhinavr2121:MangoMongo404500!@cluster0.ro0mt.mongodb.net/RacquetStats?retryWrites=true&w=majority")
 db = client.RacquetStats
 collection = db.Stats
+
+countries = pd.read_csv('data/countries.csv')
 
 @app.route('/')
 def main_root():
@@ -74,9 +77,11 @@ def get_results(player = None, location = None):
 									surface = surface,
 									location = location,
 									year = years,
+									countries = countries,
 									years = map(str, range(2005, 2022)),
 									np = np,
 									pd = pd,
+									math = math,
 									p1 = results[results['Winner'].str.upper() == (p1.upper())],
 									p2 = results[results['Winner'].str.upper() == (p2.upper())])
 		elif route == 2:
@@ -85,7 +90,9 @@ def get_results(player = None, location = None):
 									name1 = p1,
 									np = np,
 									pd = pd,
+									math = math,
 									location = location,
+									countries = countries,
 									year = years,
 									years = map(str, range(2005, 2022)),
 									surface = surface,
@@ -96,10 +103,12 @@ def get_results(player = None, location = None):
 									data = results,
 									surface = surface,
 									location = location,
+									countries = countries,
 									year = years,
 									years = map(str, range(2005, 2022)),
 									np = np,
-									pd = pd)
+									pd = pd,
+									math = math)
 		else:
 			abort(401)
 	elif request.method == 'GET':
@@ -118,6 +127,7 @@ def get_results(player = None, location = None):
 										name1 = p1,
 										np = np,
 										pd = pd,
+										countries = countries,
 										years = map(str, range(2005, 2022)),
 										p1_win = results[results['Winner'].str.upper() == (p1.upper())],
 										p1_loss = results[results['Loser'].str.upper() == (p1.upper())])
@@ -133,6 +143,7 @@ def get_results(player = None, location = None):
 										np = np,
 										pd = pd,
 										location = location,
+										countries = countries,
 										surface = "",
 										years = map(str, range(2005, 2022)))
 
@@ -159,6 +170,3 @@ def handle_404():
 
 def handle_200():
 	return '500'
-
-app.register_error_handler(404, handle_404)
-app.register_error_handler(500, handle_200)
