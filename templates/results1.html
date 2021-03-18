@@ -9,48 +9,84 @@
 		<script src='https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js'></script>
 	</head>
 	<body>
-		<a href='/'>Back</a>
-		<h1>{{name1.upper()}} || {{name2.upper()}} 
-			{%if surface | length > 0:%}
-				/ {{surface.upper()}}
-			{%endif%}
-			{%if location |length > 0:%}
-				/ {{location.upper()}}
-			{%endif%}
-			{%if year | length > 0:%}
-				/ {{year}}
-			{%endif%}
-		</h1>
-		<h2>{{p1 | length}} || {{p2 | length}}</h2>
-
-		<div>
-			<canvas id="surface"></canvas>
-			<canvas id="time_wins"></canvas>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+		  <div class="container-fluid">
+		    <div class="collapse navbar-collapse" id="navbarNav">
+		      <ul class="navbar-nav">
+		        <li class="nav-item">
+		          <a class="nav-link" aria-current="page" href="/">&larr; Back</a>
+		        </li>
+		        <li class="nav-item">
+		          <a class="nav-link" href="/player/{{name1}}">{{name1.upper()}}</a>
+		        </li>
+		        <li class="nav-item">
+		         	<a class="nav-link" href="/player/{{name2}}">{{name2.upper()}}</a>
+		        </li>
+		      </ul>
+		    </div>
+		  </div>
+		</nav>
+		<div class="container mt-5">
+			<div class="row">
+				<div class="col">
+					<h1>{{name1.upper()}} | {{name2.upper()}}</h1>
+					<h3 class="text-muted">
+					{%if surface | length > 0:%}
+						{{surface.upper()}}
+					{%endif%}
+					{%if location |length > 0:%}
+						/ {{location.upper()}}
+					{%endif%}
+					{%if year | length > 0:%}
+						/ {{year}}
+					{%endif%}
+					</h3>
+				</div>				
+			</div>
+			<div class="row">
+				<div class="col">
+					<h3>{{p1 | length}} - {{p2 | length}}</h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<h4 class="text-muted">{{((pd.to_numeric(data['Wsets']).sum() + pd.to_numeric(data['Lsets']).sum()) / (data | length)).round(2)}} sets played on average.</h4>
+				</div>
+			</div>
 		</div>
-		<table>
-			<th>
-				<tr>
-					<td>Tournament</td>
-					<td>Date</td>
-					<td>Match</td>
-					<td>Surface</td>
-					<td>Court</td>
-					<td>Score</td>
-					<td>Round</td>
-				</tr>
-			</th>
+
+		<div class="container mt-5 w-20">
+			<div class="row justify-content-center">
+				{%if surface | length == 0 %}
+					<div class="col">
+							<canvas id="surface"></canvas>
+					</div>					
+				{%endif%}
+				<div class="col">
+					<canvas id="time_wins"></canvas>
+				</div>
+			</div>
+		</div>
+		<table class="table table-hover table-striped mt-5">
+			<tr class="text-center">
+					<th scope="col">Tournament</th>
+					<th scope="col">Date</th>
+					<th scope="col">Match</th>
+					<th scope="col">Surface</th>
+					<th scope="col">Court</th>
+					<th scope="col">Score</th>
+					<th scope="col">Round</th>
+			</tr>
 			<tbody>
-				<form id='formz' method = 'post' action = '/results'></form>
 				{% for index, doc in data.iterrows():%}
-				{% set id = doc['Winner'][1:2] + (index |string) %}
 				<tr>
-					<td><a href="/results/location/{{doc['Location']}}">{{doc['Location']}}</a><br>({{doc['Series']}})</td>
-					<td>{{doc['Date']}}</td>
+					<td class="text-center"><a href="/results/location/{{doc['Location']}}">{{doc['Location']}}</a><br>({{doc['Series']}})</td>
+					<td class="text-center">{{doc['Date']}}</td>
 					<td><a href="/results/player/{{doc['Winner']}}">{{doc['Winner']}}</a>  {{doc['WRank']}}<br><a href="/results/player/{{doc['Loser']}}">{{doc['Loser']}}</a>  {{doc['LRank']}} {% if doc['Comment'] == 'Retired'%} (Ret.) {% endif %}</td>
-					<td>{{doc['Surface']}}</td>
-					<td>{{doc['Court']}}</td>
+					<td class="text-center">{{doc['Surface']}}</td>
+					<td class="text-center">{{doc['Court']}}</td>
 					<td>{{doc['W1']}}  {{doc['W2']}}  {{doc['W3']}}  {{doc['W4']}}  {{doc['W5']}}<br>{{doc['L1']}}  {{doc['L2']}}  {{doc['L3']}}  {{doc['L4']}} {{doc['L5']}}</td>
-					<td>{{doc['Round']}}</td>
+					<td class="text-center">{{doc['Round']}}</td>
 				</tr>
 				{% endfor %}
 			</tbody>
@@ -58,71 +94,66 @@
 	</body>
 
 	<script>
-
-		var form = document.getElementById("formz");
-
-		document.querySelectorAll("formzsub").forEach(item => {
-			item.addEventListener("click", event => {
-  				form.submit();
-  			})
-		});
-		var ctx1 = document.getElementById('surface').getContext('2d');
 		var ctx2 = document.getElementById('time_wins').getContext('2d');
-		const chart1 = new Chart(ctx1, {
-			type: 'bar',
-			data: 
-			{
-				labels: ['Hard', 'Clay', 'Grass', 'Carpet'],
-			  	datasets: [{
-			  		label: '{{name1.upper()}}',
-			    	data: [
-			    		{%if p1[p1['Surface'] == 'Hard'] | length > 0 %}
-			    			{{p1[p1['Surface'] == 'Hard']  | length}},
-			    		{%endif%}
-			    		{%if p1[p1['Surface'] == 'Clay'] | length > 0 %}
-			    			{{p1[p1['Surface'] == 'Clay']  | length}},
-			    		{%endif%}
-			    		{%if p1[p1['Surface'] == 'Grass'] | length > 0 %}
-			    			{{p1[p1['Surface'] == 'Grass'] | length}},
-			    		{%endif%}
-			    		{%if p1[p1['Surface'] == 'Carpet'] | length > 0 %}
-			    			{{p1[p1['Surface'] == 'Carpet'] | length}},
-			    		{%endif%}
-			    		],
-			    	borderWidth: 1,
-			    	backgroundColor: 'red'
-				},
+
+		{%if surface | length == 0 %}
+			var ctx1 = document.getElementById('surface').getContext('2d');
+			const chart1 = new Chart(ctx1, {
+				type: 'bar',
+				data: 
 				{
-					label: '{{name2.upper()}}',
-			        data: [
-			        	{%if p2[p2['Surface'] == 'Hard'] | length > 0 %}
-			    			{{p2[p2['Surface'] == 'Hard']  | length}},
-			    		{%endif%}
-			    		{%if p2[p2['Surface'] == 'Clay'] | length > 0 %}
-			    			{{p2[p2['Surface'] == 'Clay']  | length}},
-			    		{%endif%}
-			    		{%if p2[p2['Surface'] == 'Grass'] | length > 0 %}
-			    			{{p2[p2['Surface'] == 'Grass'] | length}},
-			    		{%endif%}
-			    		{%if p2[p2['Surface'] == 'Carpet'] | length > 0 %}
-			    			{{p2[p2['Surface'] == 'Carpet'] | length}},
-			    		{%endif%}
-			        ],
-			        borderWidth: 1,
-			        backgroundColor: 'green'
-			    }]
-			},
-			options: {
-				responsive: true,
-				scales: {
-			    	yAxes: [{
-			    		ticks: {
-			        		beginAtZero: true
-			        	}
-			      	}]
-			    }
-			}
-		});
+					labels: ['Hard', 'Clay', 'Grass', 'Carpet'],
+				  	datasets: [{
+				  		label: '{{name1.upper()}}',
+				    	data: [
+				    		{%if p1[p1['Surface'] == 'Hard'] | length > 0 %}
+				    			{{p1[p1['Surface'] == 'Hard']  | length}},
+				    		{%endif%}
+				    		{%if p1[p1['Surface'] == 'Clay'] | length > 0 %}
+				    			{{p1[p1['Surface'] == 'Clay']  | length}},
+				    		{%endif%}
+				    		{%if p1[p1['Surface'] == 'Grass'] | length > 0 %}
+				    			{{p1[p1['Surface'] == 'Grass'] | length}},
+				    		{%endif%}
+				    		{%if p1[p1['Surface'] == 'Carpet'] | length > 0 %}
+				    			{{p1[p1['Surface'] == 'Carpet'] | length}},
+				    		{%endif%}
+				    		],
+				    	borderWidth: 1,
+				    	backgroundColor: 'red'
+					},
+					{
+						label: '{{name2.upper()}}',
+				        data: [
+				        	{%if p2[p2['Surface'] == 'Hard'] | length > 0 %}
+				    			{{p2[p2['Surface'] == 'Hard']  | length}},
+				    		{%endif%}
+				    		{%if p2[p2['Surface'] == 'Clay'] | length > 0 %}
+				    			{{p2[p2['Surface'] == 'Clay']  | length}},
+				    		{%endif%}
+				    		{%if p2[p2['Surface'] == 'Grass'] | length > 0 %}
+				    			{{p2[p2['Surface'] == 'Grass'] | length}},
+				    		{%endif%}
+				    		{%if p2[p2['Surface'] == 'Carpet'] | length > 0 %}
+				    			{{p2[p2['Surface'] == 'Carpet'] | length}},
+				    		{%endif%}
+				        ],
+				        borderWidth: 1,
+				        backgroundColor: 'green'
+				    }]
+				},
+				options: {
+					responsive: true,
+					scales: {
+				    	yAxes: [{
+				    		ticks: {
+				        		beginAtZero: true
+				        	}
+				      	}]
+				    }
+				}
+			});
+		{%endif%}
 
 		const chart2 = new Chart(ctx2, {
 			type: 'line',

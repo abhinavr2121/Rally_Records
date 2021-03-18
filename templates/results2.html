@@ -9,75 +9,131 @@
 		<script src='https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js'></script>
 	</head>
 	<body>
-		<a href='/'>Back</a>
-		<h1>{{name1.upper()}}
-			{%if surface | length > 0:%}
-				/ {{surface.upper()}}
-			{%endif%}
-			{%if location | length > 0:%}
-				/ {{location.upper()}}
-			{%endif%}
-			{%if year | length > 0:%}
-				/ {{year}}
-			{%endif%}
-		</h1>
-		<h2>{{p1_win | length}} - {{p1_loss | length}}</h2>
-		<h2>{{p1_win | length + p1_loss | length}} matches 
-			{%if year | length > 0%}
-				in {{year}}.
-			{%else%}
-				played since 2005.
-			{%endif%}
-		</h2>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+		  <div class="container-fluid">
+		    <div class="collapse navbar-collapse" id="navbarNav">
+		      <ul class="navbar-nav">
+		        <li class="nav-item">
+		          <a class="nav-link" aria-current="page" href="/">&larr; Back</a>
+		        </li>
+		        <li class="nav-item">
+		          <a class="nav-link" href="/player/{{name1}}">{{name1.upper()}}</a>
+		        </li>
+		      </ul>
+		    </div>
+		  </div>
+		</nav>
 
-		<h3>Average Games (Win): 
-		{%if p1_win | length > 0%}
-
-		{{(pd.to_numeric(p1_win['W1']).sum() + pd.to_numeric(p1_win['W2']).sum() + pd.to_numeric(p1_win['W3']).sum() + pd.to_numeric(p1_win['W4']).sum() + pd.to_numeric(p1_win['W5']).sum()) / (pd.to_numeric(p1_win['Wsets']).sum() + pd.to_numeric(p1_win['Lsets']).sum())}}
-		{%else%}
-		0.0
-		{%endif%}
-		</h3>
-
-		<h3>Average Games (Lose): 
-		{%if p1_loss | length > 0%}
-			{{(pd.to_numeric(p1_loss['L1']).sum() + pd.to_numeric(p1_loss['L2']).sum() + pd.to_numeric(p1_loss['L3']).sum() + pd.to_numeric(p1_loss['L4']).sum() + pd.to_numeric(p1_loss['L5']).sum()) / (pd.to_numeric(p1_loss['Wsets']).sum() + pd.to_numeric(p1_loss['Lsets']).sum())}}
-		{%else%}
-		0.0
-		{%endif%}
-		</h3>
-
-		<h3>Has upset {{p1_win[pd.to_numeric(p1_win['WRank']) > pd.to_numeric(p1_win['LRank'])] | length}} times, been upset {{p1_loss[pd.to_numeric(p1_loss['WRank']) > pd.to_numeric(p1_loss['LRank'])] | length}} times.</h3>
-
-		<div>
-			<canvas id="surface"></canvas>
-			{%if year | length == 0%}
-				<canvas id="rank"></canvas>
-			{%endif%}
+		<div class="container mt-5">
+			<div class="row">
+				<div class="col">
+					<h1>{{name1.upper()}}</h1>
+					<h3 class="text-muted">
+						{%if surface | length > 0:%}
+							{{surface.upper()}}
+						{%endif%}
+						{%if location |length > 0:%}
+							/ {{location.upper()}}
+						{%endif%}
+						{%if year | length > 0:%}
+							/ {{year}}
+						{%endif%}
+					</h3>
+				</div>				
+			</div>
+			<div class="row">
+				<div class="col">
+					<h3>{{p1_win | length}} - {{p1_loss | length}} 
+					({{(100 * (p1_win | length) / ((p1_win | length) + (p1_loss | length))) | round_number}}% win rate)</h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<h3 class="text-muted">
+						{{(p1_win | length + p1_loss | length) | number_format}} matches 
+						{%if year | length > 0%}
+							in {{year}}.
+						{%else%}
+							played since 2005.
+						{%endif%}
+					</h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<h4 class="text-muted">
+						Wins 
+						{%if p1_win | length > 0%}
+							{{((pd.to_numeric(p1_win['W1']).sum() + pd.to_numeric(p1_win['W2']).sum() + pd.to_numeric(p1_win['W3']).sum() + pd.to_numeric(p1_win['W4']).sum() + pd.to_numeric(p1_win['W5']).sum()) / (pd.to_numeric(p1_win['Wsets']).sum() + pd.to_numeric(p1_win['Lsets']).sum())).round(2)}}
+						{%else%}
+						0.00
+						{%endif%}
+						games in a set on average when the outcome is a win.
+					</h4>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<h4 class="text-muted">
+						Wins 
+						{%if p1_loss | length > 0%}
+							{{((pd.to_numeric(p1_loss['L1']).sum() + pd.to_numeric(p1_loss['L2']).sum() + pd.to_numeric(p1_loss['L3']).sum() + pd.to_numeric(p1_loss['L4']).sum() + pd.to_numeric(p1_loss['L5']).sum()) / (pd.to_numeric(p1_loss['Wsets']).sum() + pd.to_numeric(p1_loss['Lsets']).sum())).round(2)}}
+						{%else%}
+							0.00
+						{%endif%}
+						games in a set on average when the outcome is a loss.
+					</h4>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<h4 class="text-muted">
+						Has upset others {{p1_win[pd.to_numeric(p1_win['WRank']) > pd.to_numeric(p1_win['LRank'])] | length}} times, been upset {{p1_loss[pd.to_numeric(p1_loss['WRank']) > pd.to_numeric(p1_loss['LRank'])] | length}} times.
+					</h4>
+				</div>
+			</div>
 		</div>
 
-		<table>
-			<th>
-				<tr>
-					<td>Tournament</td>
-					<td>Date</td>
-					<td>Match</td>
-					<td>Surface</td>
-					<td>Court</td>
-					<td>Score</td>
-					<td>Round</td>
-				</tr>
-			</th>
+		<div class="container">
+			<div class="row">
+					{%if surface | length == 0%}
+						<div class="col">
+							<canvas id="surface"></canvas>
+						</div>
+					{%endif%}
+					{%if year | length == 0%}
+						<div class="col">
+							<canvas id="rank"></canvas>
+						</div>
+					{%endif%}
+					{% if year | length > 0 or surface | length > 0%}
+						<div class="col">
+							<canvas id="winners"></canvas>
+						</div>
+					{%endif%}
+			</div>
+		</div>
+
+		<table class="table table-striped table-hover mt-5">
+			<tr class="text-center">
+				<th scope="col">Tournament</th>
+				<th scope="col">Date</th>
+				<th scope="col">Match</th>
+				<th scope="col">Surface</th>
+				<th scope="col">Court</th>
+				<th scope="col">Score</th>
+				<th scope="col">Round</th>
+			</tr>
 			<tbody>
 				{% for index, doc in data.iterrows():%}
 				<tr>
-					<td><a href="/results/location/{{doc['Location']}}">{{doc['Location']}}</a><br>({{doc['Series']}})</td>
-					<td>{{doc['Date']}}</td>
+					<td class="text-center"><a href="/results/location/{{doc['Location']}}">{{doc['Location']}}</a><br>({{doc['Series']}})</td>
+					<td class="text-center">{{doc['Date']}}</td>
 					<td><a href="/results/player/{{doc['Winner']}}">{{doc['Winner']}}</a>  {{doc['WRank']}}<br><a href="/results/player/{{doc['Loser']}}">{{doc['Loser']}}</a>  {{doc['LRank']}} {% if doc['Comment'] == 'Retired'%} (Ret.) {% endif %}</td>
-					<td>{{doc['Surface']}}</td>
-					<td>{{doc['Court']}}</td>
+					<td class="text-center">{{doc['Surface']}}</td>
+					<td class="text-center">{{doc['Court']}}</td>
 					<td>{{doc['W1']}}  {{doc['W2']}}  {{doc['W3']}}  {{doc['W4']}}  {{doc['W5']}}<br>{{doc['L1']}}  {{doc['L2']}}  {{doc['L3']}}  {{doc['L4']}} {{doc['L5']}}</td>
-					<td>{{doc['Round']}}</td>
+					<td class="text-center">{{doc['Round']}}</td>
 				</tr>
 				{% endfor %}
 			</tbody>
@@ -85,55 +141,97 @@
 	</body>
 
 	<script>
-		var ctx1 = document.getElementById('surface').getContext('2d');
-		const chart1 = new Chart(ctx1, {
+		{%if surface | length == 0%}
+			var ctx1 = document.getElementById('surface').getContext('2d');
+			const chart1 = new Chart(ctx1, {
+				type: 'bar',
+				data: 
+				{
+					labels: ['Hard', 'Clay', 'Grass', 'Carpet'],
+				  	datasets: [
+				  	{
+				  		label: 'Wins',
+				    	data: 
+				    	[
+				    		{%if p1_win[p1_win['Surface'] == 'Hard'] | length > 0 %}
+				    			{{p1_win[p1_win['Surface'] == 'Hard']  | length}},
+				    		{%endif%}
+				    		{%if p1_win[p1_win['Surface'] == 'Clay'] | length > 0 %}
+				    			{{p1_win[p1_win['Surface'] == 'Clay']  | length}},
+				    		{%endif%}
+				    		{%if p1_win[p1_win['Surface'] == 'Grass'] | length > 0 %}
+				    			{{p1_win[p1_win['Surface'] == 'Grass'] | length}},
+				    		{%endif%}
+				    		{%if p1_win[p1_win['Surface'] == 'Carpet'] | length > 0 %}
+				    			{{p1_win[p1_win['Surface'] == 'Carpet'] | length}},
+				    		{%endif%}
+				    	],
+				    	borderWidth: 1,
+				    	backgroundColor: 'green'
+					},
+					{
+						label: 'Losses',
+						data:
+						[
+							{%if p1_loss[p1_loss['Surface'] == 'Hard'] | length > 0 %}
+				    			{{p1_loss[p1_loss['Surface'] == 'Hard']  | length}},
+				    		{%endif%}
+				    		{%if p1_loss[p1_loss['Surface'] == 'Clay'] | length > 0 %}
+				    			{{p1_loss[p1_loss['Surface'] == 'Clay']  | length}},
+				    		{%endif%}
+				    		{%if p1_loss[p1_loss['Surface'] == 'Grass'] | length > 0 %}
+				    			{{p1_loss[p1_loss['Surface'] == 'Grass'] | length}},
+				    		{%endif%}
+				    		{%if p1_loss[p1_loss['Surface'] == 'Carpet'] | length > 0 %}
+				    			{{p1_loss[p1_loss['Surface'] == 'Carpet'] | length}},
+				    		{%endif%}
+				    	],
+				    	borderWidth: 1,
+				    	backgroundColor: 'red'
+					}]
+				},
+				options: {
+					responsive: true,
+					scales: {
+				    	yAxes: [{
+				    		ticks: {
+				        		beginAtZero: true
+				        	}
+				      	}]
+				    }
+				}
+			});
+		{%endif%}
+		{%if year | length > 0 or surface | length > 0%}
+			var ctx2 = document.getElementById('winners').getContext('2d');
+			const chart2 = new Chart(ctx2, {
 			type: 'bar',
 			data: 
 			{
-				labels: ['Hard', 'Clay', 'Grass', 'Carpet'],
+				labels: [
+					{%for i in range(10):%}
+						{%if data["Loser"].value_counts().index[i].upper() != name1.upper()%}
+						'{{data["Loser"].value_counts().index[i]}}',
+						{%endif%}
+					{%endfor%}
+				],
 			  	datasets: [
-			  	{
-			  		label: 'Wins',
-			    	data: 
-			    	[
-			    		{%if p1_win[p1_win['Surface'] == 'Hard'] | length > 0 %}
-			    			{{p1_win[p1_win['Surface'] == 'Hard']  | length}},
-			    		{%endif%}
-			    		{%if p1_win[p1_win['Surface'] == 'Clay'] | length > 0 %}
-			    			{{p1_win[p1_win['Surface'] == 'Clay']  | length}},
-			    		{%endif%}
-			    		{%if p1_win[p1_win['Surface'] == 'Grass'] | length > 0 %}
-			    			{{p1_win[p1_win['Surface'] == 'Grass'] | length}},
-			    		{%endif%}
-			    		{%if p1_win[p1_win['Surface'] == 'Carpet'] | length > 0 %}
-			    			{{p1_win[p1_win['Surface'] == 'Carpet'] | length}},
-			    		{%endif%}
-			    	],
-			    	borderWidth: 1,
-			    	backgroundColor: 'green'
-				},
-				{
-					label: 'Losses',
-					data:
-					[
-						{%if p1_loss[p1_loss['Surface'] == 'Hard'] | length > 0 %}
-			    			{{p1_loss[p1_loss['Surface'] == 'Hard']  | length}},
-			    		{%endif%}
-			    		{%if p1_loss[p1_loss['Surface'] == 'Clay'] | length > 0 %}
-			    			{{p1_loss[p1_loss['Surface'] == 'Clay']  | length}},
-			    		{%endif%}
-			    		{%if p1_loss[p1_loss['Surface'] == 'Grass'] | length > 0 %}
-			    			{{p1_loss[p1_loss['Surface'] == 'Grass'] | length}},
-			    		{%endif%}
-			    		{%if p1_loss[p1_loss['Surface'] == 'Carpet'] | length > 0 %}
-			    			{{p1_loss[p1_loss['Surface'] == 'Carpet'] | length}},
-			    		{%endif%}
-			    	],
-			    	borderWidth: 1,
-			    	backgroundColor: 'red'
-				}]
+			  		
+			  		{
+				    	data: [
+				    	{%for i in range(10):%}
+				    		{%if data["Loser"].value_counts().index[i].upper() != name1.upper()%}
+				    			{{data["Loser"].value_counts()[i]}},
+				    		{%endif%}
+				    	{%endfor%}
+				    	],
+				    	backgroundColor: 'lightgreen',
+				    	borderWidth: 1,
+					},
+				],
 			},
 			options: {
+				legend: {display: false},
 				responsive: true,
 				scales: {
 			    	yAxes: [{
@@ -144,10 +242,10 @@
 			    }
 			}
 		});
-
+		{%endif%}
 		{%if year | length == 0%}
-			var ctx2 = document.getElementById('rank').getContext('2d');
-			const chart2 = new Chart(ctx2, {
+			var ctx3 = document.getElementById('rank').getContext('2d');
+			const chart3 = new Chart(ctx3, {
 				type: 'line',
 				data: 
 				{

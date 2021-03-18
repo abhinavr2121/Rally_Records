@@ -1,5 +1,7 @@
-- Better UI.
-
-- H2H Average Games per Set each player
-
 - misnamed players showing up as different from original
+- wta
+- country stats
+- background image for tournament city homepage
+- bug fix ranking info (look up Delgado for evidence)
+- error handling
+- country flags

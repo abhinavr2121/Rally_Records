@@ -46,8 +46,8 @@ def get_results(player = None, location = None):
 							  {'Date': {'$regex': '.*' + years + '.*', '$options': 'i'}}]}
 			route = 1
 		elif len(p1) > 0 and len(p2) == 0: # one player
-			query = {'$and': [{'$or': [{'Winner': {'$regex': '.*' + p1 + '.*', '$options': 'i'}},
-							 {'Loser': {'$regex': '.*' + p1 + '.*', '$options': 'i' }}]},
+			query = {'$and': [{'$or': [{'Winner': {'$regex': p1, '$options': 'i'}},
+							 {'Loser': {'$regex': p1, '$options': 'i' }}]},
 							 {'Surface': {'$regex': surface, '$options': 'i'}},
 							 {'Location': {'$regex': location, '$options': 'i'}},
 							 {'Date': {'$regex': '.*' + years + '.*', '$options': 'i'}}]}
@@ -59,12 +59,14 @@ def get_results(player = None, location = None):
 			route = 3
 
 		results = pd.DataFrame(list(collection.find(query)))
-		results['Date'] = pd.to_datetime(results['Date'], format = '%m/%d/%Y')
-		results = results.sort_values('Date', ascending = False)
-		results['Date'] = results['Date'].dt.strftime('%m/%d/%Y')
+		if len(results) > 0:
+			results['Date'] = pd.to_datetime(results['Date'], format = '%m/%d/%Y')
+			results = results.sort_values('Date', ascending = False)
+			results['Date'] = results['Date'].dt.strftime('%m/%d/%Y')
+		else:
+			abort(404)
 
 		if route == 1:
-			print('Route1')
 			return render_template('results1.html', 
 									data = results, 
 									name1 = p1, 
@@ -74,10 +76,10 @@ def get_results(player = None, location = None):
 									year = years,
 									years = map(str, range(2005, 2022)),
 									np = np,
-									p1 = results[results['Winner'].str.upper().str.contains(p1.upper())],
-									p2 = results[results['Winner'].str.upper().str.contains(p2.upper())])
+									pd = pd,
+									p1 = results[results['Winner'].str.upper() == (p1.upper())],
+									p2 = results[results['Winner'].str.upper() == (p2.upper())])
 		elif route == 2:
-			print('Route2')
 			return render_template('results2.html', 
 									data = results,
 									name1 = p1,
@@ -87,10 +89,9 @@ def get_results(player = None, location = None):
 									year = years,
 									years = map(str, range(2005, 2022)),
 									surface = surface,
-									p1_win = results[results['Winner'].str.upper().str.contains(p1.upper())],
-									p1_loss = results[results['Loser'].str.upper().str.contains(p1.upper())])
+									p1_win = results[results['Winner'].str.upper() == (p1.upper())],
+									p1_loss = results[results['Loser'].str.upper() == (p1.upper())])
 		elif route == 3:
-			print('Route3')
 			return render_template('results3.html',
 									data = results,
 									surface = surface,
@@ -100,13 +101,13 @@ def get_results(player = None, location = None):
 									np = np,
 									pd = pd)
 		else:
-			abort(404)
+			abort(401)
 	elif request.method == 'GET':
 		loc = location
 		p1 = player
 
 		if p1 is not None:
-			query = {'$or': [{'Winner': player}, {'Loser': player}]}
+			query = {'$or': [{'Winner': {'$regex': player, '$options': 'i'}}, {'Loser': {'$regex': player, '$options': 'i'}}]}
 			results = pd.DataFrame(list(collection.find(query)))
 			results['Date'] = pd.to_datetime(results['Date'], format = '%m/%d/%Y')
 			results = results.sort_values('Date', ascending = False)
@@ -118,8 +119,8 @@ def get_results(player = None, location = None):
 										np = np,
 										pd = pd,
 										years = map(str, range(2005, 2022)),
-										p1_win = results[results['Winner'].str.upper().str.contains(p1.upper())],
-										p1_loss = results[results['Loser'].str.upper().str.contains(p1.upper())])
+										p1_win = results[results['Winner'].str.upper() == (p1.upper())],
+										p1_loss = results[results['Loser'].str.upper() == (p1.upper())])
 		elif loc is not None:
 			query = {'Location': loc}
 			results = pd.DataFrame(list(collection.find(query)))
@@ -145,10 +146,19 @@ def add_header(response):
     response.headers['Cache-Control'] = 'public, max-age=0'
     return response
 
-@app.errorhandler(404)
-def error_handler():
-	return render_template('404.html')
+@app.template_filter()
+def number_format(number):
+	return format(int(number), ',d')
 
-@app.errorhandler(500)
-def error_handler():
-	return render_template('500.html')
+@app.template_filter()
+def round_number(number):
+	return round(number, 2)
+
+def handle_404():
+	return '404'
+
+def handle_200():
+	return '500'
+
+app.register_error_handler(404, handle_404)
+app.register_error_handler(500, handle_200)

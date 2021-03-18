@@ -30,18 +30,16 @@
 			<canvas id="chart1"></canvas>
 			<canvas id="chart2"></canvas>
 		</div>
-		<table>
-			<th>
-				<tr>
-					<td>Tournament</td>
-					<td>Date</td>
-					<td>Match</td>
-					<td>Surface</td>
-					<td>Court</td>
-					<td>Score</td>
-					<td>Round</td>
-				</tr>
-			</th>
+		<table class="table table-striped table-hover text-center">
+			<tr>
+				<th scope="col">Tournament</th>
+				<th scope="col">Date</th>
+				<th scope="col">Match</th>
+				<th scope="col">Surface</th>
+				<th scope="col">Court</th>
+				<th scope="col">Score</th>
+				<th scope="col">Round</th>
+			</tr>
 			<tbody>
 				{% for index, doc in data.iterrows():%}
 				<tr>
