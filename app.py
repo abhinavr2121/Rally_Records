@@ -170,3 +170,6 @@ def handle_404():
 
 def handle_200():
 	return '500'
+
+if __name__ == 'main':
+	app.run(host = '0.0.0.0')
