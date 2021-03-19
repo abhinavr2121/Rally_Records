@@ -1,5 +1,6 @@
 - wta
 - country stats
+- loading times
 - set up pipeline/verification
 - design favicon
 - design logo
