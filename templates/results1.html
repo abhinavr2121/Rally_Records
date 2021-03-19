@@ -100,33 +100,41 @@
 					<td class="text-center">{{doc['Surface']}}</td>
 					<td class="text-center">{{doc['Court']}}</td>
 					<td>
-						{% for i in range(1, 6): %}
-							{% set w = 'W' ~ i %} 
-							{% set l = 'L' ~ i %}
-							{% if (doc[w] | string) | length > 0 %}
-								<div class="score text-center">
-									{% if pd.to_numeric(doc[w]) > pd.to_numeric(doc[l])%}
-										<b>{{doc[w]}}</b>
-									{% else %}
-										{{doc[w]}}
-									{% endif %}
-								</div>
-							{% endif %}
-						{% endfor %}
+						{% if (doc['W1'] | string) | length > 0 %}
+							{% for i in range(1, 6): %}
+								{% set w = 'W' ~ i %} 
+								{% set l = 'L' ~ i %}
+								{% if (doc[w] | string) | length > 0 %}
+									<div class="score text-center">
+										{% if pd.to_numeric(doc[w]) > pd.to_numeric(doc[l])%}
+											<b>{{doc[w]}}</b>
+										{% else %}
+											{{doc[w]}}
+										{% endif %}
+									</div>
+								{% endif %}
+							{% endfor %}
+						{% else %}
+							Data unavailable.
+						{% endif %}
 						<br>
-						{% for i in range(1, 6): %}
-							{% set w = 'W' ~ i %} 
-							{% set l = 'L' ~ i %}
-							{% if (doc[l] | string) | length > 0 %}
-								<div class="score text-center">
-									{% if pd.to_numeric(doc[l]) > pd.to_numeric(doc[w])%}
-										<b>{{doc[l]}}</b>
-									{% else %}
-										{{doc[l]}}
-									{% endif %}
-								</div>
-							{% endif %}
-						{% endfor %}
+						{% if (doc['L1'] | string) | length > 0 %}
+							{% for i in range(1, 6): %}
+								{% set w = 'W' ~ i %} 
+								{% set l = 'L' ~ i %}
+								{% if (doc[l] | string) | length > 0 %}
+									<div class="score text-center">
+										{% if pd.to_numeric(doc[l]) > pd.to_numeric(doc[w])%}
+											<b>{{doc[l]}}</b>
+										{% else %}
+											{{doc[l]}}
+										{% endif %}
+									</div>
+								{% endif %}
+							{% endfor %}
+						{% else %}
+							Data unavailable.
+						{% endif %}
 					<td class="text-center">{{doc['Round']}}</td>
 				</tr>
 				{% endfor %}

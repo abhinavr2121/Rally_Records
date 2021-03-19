@@ -61,6 +61,8 @@ def get_results(player = None, location = None):
 							  {'Location': {'$regex': location, '$options': 'i'}},
 							  {'Date': {'$regex': '.*' + years + '.*', '$options': 'i'}}]}
 			route = 3
+		else:
+			abort(401)
 
 		results = pd.DataFrame(list(collection.find(query)))
 		if len(results) > 0:
@@ -128,6 +130,7 @@ def get_results(player = None, location = None):
 										name1 = p1,
 										np = np,
 										pd = pd,
+										math = math,
 										countries = countries,
 										years = map(str, range(2005, 2022)),
 										p1_win = results[results['Winner'].str.upper() == (p1.upper())],
@@ -143,6 +146,7 @@ def get_results(player = None, location = None):
 										name1 = p1,
 										np = np,
 										pd = pd,
+										math = math,
 										location = location,
 										countries = countries,
 										surface = "",
@@ -166,11 +170,21 @@ def number_format(number):
 def round_number(number):
 	return round(number, 2)
 
-def handle_404():
-	return '404'
+def handle_401(e):
+	return render_template('errors.html',
+							message = 'No parameters were entered.')
 
-def handle_200():
-	return '500'
+def handle_404(e):
+	return render_template('errors.html',
+							message = 'There were no "matches" for those parameters!')
+
+def handle_500(e):
+	return render_template('errors.html',
+							message = "Something went wrong. It's our fault, not yours.")
+
+app.register_error_handler(401, handle_401)
+app.register_error_handler(404, handle_404)
+app.register_error_handler(500, handle_500)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

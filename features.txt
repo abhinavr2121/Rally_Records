@@ -1,5 +1,7 @@
 - wta
 - country stats
-- error handling
-- 'data unavailable' for unavailable scores
 - set up pipeline/verification
+- design favicon
+- design logo
+- bubbles for win rate metric
+- dropdown on player page for locations/similar players/surfaces
