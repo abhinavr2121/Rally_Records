@@ -140,16 +140,16 @@
 					<td>
 						<img src="https://www.countryflags.io/{{countries[countries['Name'].str.upper() == doc['Winner'].upper()].Code.values[0]}}/flat/24.png">
 						<a href="/results/player/{{doc['Winner']}}">{{doc['Winner']}}</a>  
-						{% if doc['WRank'] != '' %}
+						{% if doc['WRank'] != '' and doc['WRank'] > 0 %}
 						({{doc['WRank']}}) 
-						{% else %}
+						{% elif doc['WRank'] == 0 or doc['WRank'] == '' %}
 						(NA) 
 						{% endif %}<br>
 						<img src="https://www.countryflags.io/{{countries[countries['Name'].str.upper() == doc['Loser'].upper()].Code.values[0]}}/flat/24.png">
 						<a href="/results/player/{{doc['Loser']}}">{{doc['Loser']}}</a>  
-						{% if doc['LRank'] != '' %}
+						{% if doc['LRank'] != '' and doc['LRank'] > 0 %}
 						({{doc['LRank']}}) 
-						{% else %}
+						{% elif doc['LRank'] == 0 or doc['LRank'] == '' %}
 						(NA) 
 						{% endif %}
 						{% if doc['Comment'] == 'Retired'%} (Ret.) {% endif %}
@@ -321,16 +321,23 @@
 				  		label: 'Ranking',
 				    	data: [
 				    		{%for i in years:%}
-				    			{% set year_sub_win = (p1_win[p1_win['Date'].str[-4:] == i]) %}
-				    			{% set year_sub_loss = (p1_loss[p1_loss['Date'].str[-4:] == i]) %}
+				    			{% set year_sub_win = p1_win[p1_win['Date'].str[-4:] == i] %}
+				    			{% set year_sub_loss = p1_loss[p1_loss['Date'].str[-4:] == i] %}
 				    			{% if (year_sub_win | length > 0) or (year_sub_loss | length > 0) %}
-				    				{% set min_win = year_sub_win.WRank.min() | string %}
-				    				{% set min_loss = year_sub_loss.LRank.min() | string %}
-				    				{% if min_win != 'nan' or min_loss != 'nan' %}
+				    				
+				    				{% set min_win = ('0' + year_sub_win.WRank.min() | string) | int %}
+				    				{% set min_loss = ('0' + year_sub_loss.LRank.min() | string) | int %}
+				    				{{ min_win | debug }}
+				    				{{ min_loss | debug }}
+				    				{% if min_win > 0 or min_loss > 0 %}
 				    					{% if min_win < min_loss: %}
-				    						{{min_win}},
+				    						{% if min_win > 0 %}
+				    							{{min_win}},
+				    						{% endif %}
 				    					{% elif min_loss <= min_win: %}
-				    						{{min_loss}},
+				    						{% if min_loss > 0 %}
+				    							{{min_loss}},
+				    						{% endif %}
 				    					{% endif %}
 				    				{% else %}
 				    					NaN,

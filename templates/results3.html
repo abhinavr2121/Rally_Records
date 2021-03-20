@@ -85,16 +85,16 @@
 						<td>
 							<img src="https://www.countryflags.io/{{countries[countries['Name'].str.upper() == doc['Winner'].upper()].Code.values[0]}}/flat/24.png">
 							<a href="/results/player/{{doc['Winner']}}">{{doc['Winner']}}</a>  
-							{% if doc['WRank'] != '' %}
+							{% if doc['WRank'] != '' and doc['WRank'] > 0 %}
 								({{doc['WRank']}}) 
-							{% else %}
+							{% elif doc['WRank'] == 0 or doc['WRank'] == '' %}
 								(NA) 
 							{% endif %}<br>
 							<img src="https://www.countryflags.io/{{countries[countries['Name'].str.upper() == doc['Loser'].upper()].Code.values[0]}}/flat/24.png">
 							<a href="/results/player/{{doc['Loser']}}">{{doc['Loser']}}</a>  
-							{% if doc['LRank'] != '' %}
+							{% if doc['LRank'] != '' and doc['LRank'] > 0 %}
 								({{doc['LRank']}}) 
-							{% else %}
+							{% elif doc['LRank'] == 0 or doc['LRank'] == '' %}
 								(NA) 
 							{% endif %} {% if doc['Comment'] == 'Retired'%} (Ret.) {% endif %}
 						</td>
