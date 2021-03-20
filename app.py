@@ -21,6 +21,7 @@ def main_root():
 	distinct_winners = pd.DataFrame(list(collection.distinct('Winner')))
 	distinct_losers = pd.DataFrame(list(collection.distinct('Loser')))
 
+	distinct_countries = countries['Country'].unique().tolist()
 	distinct_locations = pd.DataFrame(list(collection.distinct('Location')))
 	distinct_players = pd.concat([distinct_winners, distinct_losers])
 
@@ -30,7 +31,7 @@ def main_root():
 							names = names, 
 							surface = ['Hard', 'Clay', 'Grass', 'Carpet'],
 							locations = locations,
-							years = str(list(range(2005, 2022))))
+							countries = distinct_countries)
 
 @app.route('/results/', methods = ['POST', 'GET'])
 @app.route('/results/location/<location>', methods = ['POST', 'GET'])
@@ -42,6 +43,7 @@ def get_results(player = None, location = None):
 		p2 = request.form.get('p2').capitalize()
 		surface = request.form.get('surface').capitalize()
 		location = request.form.get('location').capitalize()
+		country = request.form.get('country').capitalize()
 		years = request.form.get('year')
 		query = None
 
@@ -59,7 +61,7 @@ def get_results(player = None, location = None):
 							 {'Location': {'$regex': location, '$options': 'i'}},
 							 {'Date': {'$regex': '.*' + years + '.*', '$options': 'i'}}]}
 			route = 2
-		elif len(p1) == 0 and len(p2) == 0 and (len(surface) > 0 or len(location) > 0 or len(years) > 0):
+		elif len(p1) == 0 and len(p2) == 0 and (len(surface) > 0 or len(location) > 0 or len(years) > 0 or len(country) > 0):
 			query = {'$and': [{'Surface': {'$regex': surface}},
 							  {'Location': {'$regex': location, '$options': 'i'}},
 							  {'Date': {'$regex': '.*' + years + '.*', '$options': 'i'}}]}
@@ -67,7 +69,11 @@ def get_results(player = None, location = None):
 		else:
 			abort(401)
 
+		nationality = countries.Name.values
 		results = pd.DataFrame(list(collection.find(query)))
+		if len(country) > 0:
+			nationality = countries[countries['Country'] == country].Name.values
+			results = results[results['Winner'].isin(nationality) | results['Loser'].isin(nationality)]
 		if len(results) > 0:
 			results['Date'] = pd.to_datetime(results['Date'], format = '%m/%d/%Y')
 			results = results.sort_values('Date', ascending = False)
@@ -83,10 +89,10 @@ def get_results(player = None, location = None):
 									surface = surface,
 									location = location,
 									year = years,
+									country = country,
 									countries = countries,
 									years = map(str, range(2005, 2022)),
 									np = np,
-									re = re,
 									pd = pd,
 									math = math,
 									p1 = results[results['Winner'].str.upper() == (p1.upper())],
@@ -117,11 +123,12 @@ def get_results(player = None, location = None):
 									time = time,
 									surface = surface,
 									location = location,
+									nationality = nationality,
 									countries = countries,
+									country = country,
 									year = years,
 									years = map(str, range(2005, 2022)),
 									np = np,
-									re = re,
 									pd = pd,
 									math = math)
 		else:

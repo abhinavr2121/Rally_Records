@@ -48,6 +48,9 @@
             		  <input type="text" placeholder="Location" name="location" id="location">
                     </div>
                     <div class="col">
+                      <input type="text" placeholder="Country" name="country" id="country">
+                    </div>
+                    <div class="col">
                       <input type="number" placeholder="Year" name="year" id = "year" min = '2005', max = '2021'>
                     </div>
                 </div>
@@ -104,9 +107,10 @@
             var names = {{ names | safe }};
             var surface = {{ surface | safe }};
             var locations = {{ locations | safe }};
-            var years = {{ years | safe }};
+            var countries = {{ countries | safe }}
             $( "#surface" ).autocomplete({ source: surface });
             $( ".names" ).autocomplete({ source: names });
             $( "#location" ).autocomplete({ source: locations });
+            $( "#country" ).autocomplete({ source: countries });
         });</script>
 </html>

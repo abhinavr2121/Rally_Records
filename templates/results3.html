@@ -23,6 +23,10 @@
 		        <li class="nav-item">
 		          	<a class="nav-link">{%if surface | length > 0%}  {{surface}} {%endif%}</a>
 		        </li>
+		        </li>
+		        <li class="nav-item">
+		          	<a class="nav-link">{%if country | length > 0%}  {{country}} {%endif%}</a>
+		        </li>
 		        <li class="nav-item">
 		        	<a class="nav-link">{%if year | length > 0%} {{year}} {%endif%}</a>
 		        </li>
@@ -36,6 +40,11 @@
 					<h1>{%if location | length > 0%} ATP {{location}} {%endif%}
 						{%if surface | length > 0%} / {{surface}} {%endif%}
 						{%if year | length > 0%} / {{year}} {%endif%}
+						{%if country | length > 0%} 
+						/ {{country}}
+						{% set c = countries[countries['Country'] == country].Code.values[0] %} 
+						<img src="https://www.countryflags.io/{{c}}/flat/64.png">
+						{%endif%}
 					</h1>
 					<hr>
 					<h3 class="text-muted">{{data | length | number_format}} matches played 
@@ -44,7 +53,11 @@
 
 					<h3 class="text-muted">Best Performer: {{data['Winner'].mode()[0]}} ({{data['Winner'].value_counts()[0] | number_format}} wins)</h3>
 
-					<h3 class="text-muted">{{data[pd.to_numeric(data['WRank']) > pd.to_numeric(data['LRank'])] | length | number_format}} upsets ({{(100 * (data[pd.to_numeric(data['WRank']) > pd.to_numeric(data['LRank'])] | length) / (data | length)) | round_number}}% of total).</h3>
+					{% if country | length > 0 %}
+						<h3 class="text-muted">Overall Performance: {{data[data['Winner'].isin(nationality)] | length}} - {{data[data['Loser'].isin(nationality)] | length}} ({{(100 * (data[data['Winner'].isin(nationality)] | length) / (data[data['Winner'].isin(nationality)] | length + data[data['Loser'].isin(nationality)] | length)) | round_number}}% win rate).</h3>
+					{% else %}
+						<h3 class="text-muted">{{data[pd.to_numeric(data['WRank']) > pd.to_numeric(data['LRank'])] | length | number_format}} upsets ({{(100 * (data[pd.to_numeric(data['WRank']) > pd.to_numeric(data['LRank'])] | length) / (data | length)) | round_number}}% of total).</h3>
+					{% endif %}
 				</div>
 			</div>
 		</div>
@@ -196,17 +209,29 @@
 			data: 
 			{
 				labels: [
-					{%for i in range(10):%}
-						'{{data["Winner"].value_counts().index[i]}}',
+					{%for i in range(15):%}
+						{% if country | length == 0 %}
+							'{{data["Winner"].value_counts().index[i]}}',
+						{% else %}
+							{% if data['Winner'].value_counts().index[i] in nationality %}
+								'{{data["Winner"].value_counts().index[i]}}',
+							{% endif %}
+						{% endif %}
 					{%endfor%}
 				],
 			  	datasets: [
 			  		
 			  		{
 				    	data: [
-				    	{%for i in range(10):%}
-				    		{{data["Winner"].value_counts()[i]}},
-				    	{%endfor%}
+				    	{%for i in range(15):%}
+						{% if country | length == 0 %}
+							{{data["Winner"].value_counts()[i]}},
+						{% else %}
+							{% if data['Winner'].value_counts().index[i] in nationality %}
+								{{data["Winner"].value_counts()[i]}},
+							{% endif %}
+						{% endif %}
+					{%endfor%}
 				    	],
 				    	backgroundColor: '#FE8534',
 				    	borderWidth: 1,
