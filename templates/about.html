@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <link href="{{url_for('static',filename='main.css')}}?v=1.0" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+          <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <a class="nav-link" href="/">&larr; Back</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/changelog">Changelog</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+        <div class="container mt-5 text-center">
+            <h1 class="display-4">AceStats is a custom query builder for tennis match data.</h1>
+        </div>
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col">
+                    <h6>You can use AceStats to search for:</h6>
+                    <ul>
+                        <li>all matches on a particular surface.</li>
+                        <li>all matches where your favorite player has played.</li>
+                        <li>a head-to-head comparison between two players.</li>
+                        <li>a particular location.</li>
+                        <li>any combination of the above variables!</li>
+                    </ul>
+                </div>
+                <div class="col">
+                    <h6 class="lh-lg">The available data is updated periodically (not continuous, unfortunately!), so the most recent matches may not be immediately available. We have data going back to 2005 (ATP) and 2007 (WTA, coming soon!).</h6>
+                </div>
+                <div class="col">
+                    <h6 class="lh-lg">AceStats is built on a Python backend (Flask) and a MongoDB cloud cluster. It uses Jinja2 as the templating engine and ChartsJS for the beautiful, dynamic graphics. It exists on the web thanks to Heroku.</h6>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

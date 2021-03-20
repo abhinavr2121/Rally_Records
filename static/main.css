@@ -46,10 +46,9 @@ input {
 	border: none;
 }
 
-.title {
-	text-align: center;
-	padding-top: 7%;
-	padding-bottom: 7%;
+.fixedHeight {
+	max-height: 300px;
+	overflow: auto;
 }
 
 .carousel h4 {

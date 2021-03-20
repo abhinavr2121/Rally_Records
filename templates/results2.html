@@ -28,8 +28,10 @@
 		<div class="container mt-5">
 			<div class="row">
 				<div class="col">
-					<h1>{{name1.upper()}}  <img src="https://www.countryflags.io/{{countries[countries['Name'].str.upper() == name1.upper()].Code.values[0]}}/flat/64.png"></h1>
+					<h2>{{ first_name }}</h2>
+					<h1 class="m-0">{{ last_name.upper() }}  <img src="https://www.countryflags.io/{{countries[countries['Name'].str.upper() == name1.upper()].Code.values[0]}}/flat/64.png"></h1>
 					<h3 class="text-muted">{{countries[countries['Name'].str.upper() == name1.upper()].Country.values[0]}}</h3>
+					<hr>
 					<h3 class="text-muted">
 						{%if surface | length > 0:%}
 							{{surface.upper()}}
@@ -327,8 +329,6 @@
 				    				
 				    				{% set min_win = ('0' + year_sub_win.WRank.min() | string) | int %}
 				    				{% set min_loss = ('0' + year_sub_loss.LRank.min() | string) | int %}
-				    				{{ min_win | debug }}
-				    				{{ min_loss | debug }}
 				    				{% if min_win > 0 or min_loss > 0 %}
 				    					{% if min_win < min_loss: %}
 				    						{% if min_win > 0 %}

@@ -3,6 +3,7 @@ import pymongo
 import pandas as pd
 import json
 import time
+import re
 import math
 import numpy as np
 import os
@@ -43,6 +44,7 @@ def get_results(player = None, location = None):
 		location = request.form.get('location').capitalize()
 		years = request.form.get('year')
 		query = None
+
 		if len(p1) > 0 and len(p2) > 0: # two players
 			query = {'$and': [{'Winner': {'$regex': p1 + '|' + p2, '$options': 'i'}},
 							  {'Loser': {'$regex': p1 + '|' + p2, '$options': 'i'}},
@@ -84,16 +86,23 @@ def get_results(player = None, location = None):
 									countries = countries,
 									years = map(str, range(2005, 2022)),
 									np = np,
+									re = re,
 									pd = pd,
 									math = math,
 									p1 = results[results['Winner'].str.upper() == (p1.upper())],
 									p2 = results[results['Winner'].str.upper() == (p2.upper())])
 		elif route == 2:
+			space_index = [m.start() for m in re.finditer(" ", p1.upper())][-1]
+			last_name = p1[:space_index]
+			first_name = countries[countries['Name'].str.upper() == p1.upper()].First.values[0]
 			return render_template('results2.html', 
 									data = results,
 									name1 = p1,
+									first_name = first_name,
+									last_name = last_name,
 									np = np,
 									pd = pd,
+									re = re,
 									math = math,
 									location = location,
 									countries = countries,
@@ -112,6 +121,7 @@ def get_results(player = None, location = None):
 									year = years,
 									years = map(str, range(2005, 2022)),
 									np = np,
+									re = re,
 									pd = pd,
 									math = math)
 		else:
@@ -132,6 +142,7 @@ def get_results(player = None, location = None):
 										name1 = p1,
 										np = np,
 										pd = pd,
+										re = re,
 										math = math,
 										countries = countries,
 										years = map(str, range(2005, 2022)),
@@ -148,6 +159,7 @@ def get_results(player = None, location = None):
 										name1 = p1,
 										np = np,
 										pd = pd,
+										re = re,
 										math = math,
 										location = location,
 										countries = countries,
@@ -157,6 +169,13 @@ def get_results(player = None, location = None):
 	else:
 		abort(404)
 
+@app.route('/about')
+def serve_about():
+	return render_template('about.html')
+
+@app.route('/changelog')
+def serve_changelog():
+	return render_template('changelog.html')
 
 @app.after_request
 def add_header(response):

@@ -31,6 +31,7 @@
 			<div class="row">
 				<div class="col">
 					<h1>{{name1.upper()}}  <img src="https://www.countryflags.io/{{countries[countries['Name'].str.upper() == name1.upper()].Code.values[0]}}/flat/64.png">  | {{name2.upper()}}  <img src="https://www.countryflags.io/{{countries[countries['Name'].str.upper() == name2.upper()].Code.values[0]}}/flat/64.png"></h1>
+					<hr>
 					<h3 class="text-muted">
 					{%if surface | length > 0:%}
 						{{surface.upper()}}
