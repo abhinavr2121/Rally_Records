@@ -1,0 +1,9 @@
+1. Download data from tennis-data.co.uk
+2. Run import_data.py to identify mistmatching names
+3. Manually correct names on a case-by-case (too many exceptions to automate)
+4. Replace N/A ranks with blank strings
+5. Add new players to countries.csv with updated country/flag/first name information
+6. Convert .xlsx data to .csv to .json
+7. Connect via shell (as specified on MongoDB cluster), upload data
+8. Test
+9. Update "last updated" on homepage

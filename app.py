@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, abort
 import pymongo
 import pandas as pd
 import json
+import time
 import math
 import numpy as np
 import os
@@ -104,6 +105,7 @@ def get_results(player = None, location = None):
 		elif route == 3:
 			return render_template('results3.html',
 									data = results,
+									time = time,
 									surface = surface,
 									location = location,
 									countries = countries,
@@ -161,6 +163,11 @@ def add_header(response):
     response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
     response.headers['Cache-Control'] = 'public, max-age=0'
     return response
+
+@app.template_filter()
+def debug(text):
+	print(text)
+	return ''
 
 @app.template_filter()
 def number_format(number):

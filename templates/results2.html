@@ -96,7 +96,7 @@
 			</div>
 		</div>
 
-		<div class="container">
+		<div class="container mb-5 mt-5">
 			<div class="row">
 					{%if surface | length == 0%}
 						<div class="col">
@@ -116,7 +116,13 @@
 			</div>
 		</div>
 
-		<table class="table table-hover table-striped mt-5 align-middle">
+		{% if data | length > 5000: %}
+			<div class="container">
+				<h6 class="text-muted">Results truncated to 2,500 rows. Make your queries more specific to see more results, faster.</h6>
+			</div>
+		{% endif %}
+
+		<table class="table table-hover table-striped align-middle">
 			<tr>
 				<th scope="col" class="w-10 text-center">Tournament</th>
 				<th scope="col" class="w-10 text-center">Date</th>
@@ -127,15 +133,26 @@
 				<th scope="col" class="w-10 text-center">Round</th>
 			</tr>
 			<tbody>
-				{% for index, doc in data.iterrows():%}
+				{% for index, doc in data.head(2500).iterrows():%}
 				<tr>
 					<td class="text-center"><a href="/results/location/{{doc['Location']}}">{{doc['Location']}}</a><br>({{doc['Series']}})</td>
 					<td class="text-center">{{doc['Date']}}</td>
 					<td>
 						<img src="https://www.countryflags.io/{{countries[countries['Name'].str.upper() == doc['Winner'].upper()].Code.values[0]}}/flat/24.png">
-						<a href="/results/player/{{doc['Winner']}}">{{doc['Winner']}}</a>  ({{doc['WRank']}})<br>
+						<a href="/results/player/{{doc['Winner']}}">{{doc['Winner']}}</a>  
+						{% if doc['WRank'] != '' %}
+						({{doc['WRank']}}) 
+						{% else %}
+						(NA) 
+						{% endif %}<br>
 						<img src="https://www.countryflags.io/{{countries[countries['Name'].str.upper() == doc['Loser'].upper()].Code.values[0]}}/flat/24.png">
-						<a href="/results/player/{{doc['Loser']}}">{{doc['Loser']}}</a>  ({{doc['LRank']}}) {% if doc['Comment'] == 'Retired'%} (Ret.) {% endif %}
+						<a href="/results/player/{{doc['Loser']}}">{{doc['Loser']}}</a>  
+						{% if doc['LRank'] != '' %}
+						({{doc['LRank']}}) 
+						{% else %}
+						(NA) 
+						{% endif %}
+						{% if doc['Comment'] == 'Retired'%} (Ret.) {% endif %}
 					</td>
 					<td class="text-center">{{doc['Surface']}}</td>
 					<td class="text-center">{{doc['Court']}}</td>
@@ -304,14 +321,17 @@
 				  		label: 'Ranking',
 				    	data: [
 				    		{%for i in years:%}
-				    			{% if (p1_win[p1_win['Date'].str[-4:] == i] | length > 0) or (p1_loss[p1_loss['Date'].str[-4:] == i] | length > 0) %}
-				    				{% set min_win = p1_win[p1_win['Date'].str[-4:] == i].WRank.min() %}
-				    				{% set min_loss = p1_loss[p1_loss['Date'].str[-4:] == i].LRank.min() %}
-
-				    				{% if min_win < min_loss %}
-				    					{{min_win}},
-				    				{% elif not math.isnan(min_loss)  %}
-				    					{{min_loss}},
+				    			{% set year_sub_win = (p1_win[p1_win['Date'].str[-4:] == i]) %}
+				    			{% set year_sub_loss = (p1_loss[p1_loss['Date'].str[-4:] == i]) %}
+				    			{% if (year_sub_win | length > 0) or (year_sub_loss | length > 0) %}
+				    				{% set min_win = year_sub_win.WRank.min() | string %}
+				    				{% set min_loss = year_sub_loss.LRank.min() | string %}
+				    				{% if min_win != 'nan' or min_loss != 'nan' %}
+				    					{% if min_win < min_loss: %}
+				    						{{min_win}},
+				    					{% elif min_loss <= min_win: %}
+				    						{{min_loss}},
+				    					{% endif %}
 				    				{% else %}
 				    					NaN,
 				    				{% endif %}

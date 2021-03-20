@@ -49,7 +49,7 @@
 		</div>
 
 		
-		<div class="container mt-5 w-20">
+		<div class="container mt-5 w-20 mb-5">
 			<div class="row">
 				{% if year | length == 0 %}
 				<div class="col">
@@ -62,7 +62,12 @@
 			</div>
 		</div>
 
-		<table class="table table-hover table-striped mt-5 align-middle">
+		{% if data | length > 5000: %}
+			<div class="container">
+				<h6 class="text-muted">Results truncated to 2,500 rows. Make your queries more specific to see more results, faster.</h6>
+			</div>
+		{% endif %}
+		<table class="table table-hover table-striped align-middle">
 			<tr>
 				<th scope="col" class="w-10 text-center">Tournament</th>
 				<th scope="col" class="w-10 text-center">Date</th>
@@ -73,56 +78,66 @@
 				<th scope="col" class="w-10 text-center">Round</th>
 			</tr>
 			<tbody>
-				{% for index, doc in data.iterrows():%}
-				<tr>
-					<td class="text-center"><a href="/results/location/{{doc['Location']}}">{{doc['Location']}}</a><br>({{doc['Series']}})</td>
-					<td class="text-center">{{doc['Date']}}</td>
-					<td>
-						<img src="https://www.countryflags.io/{{countries[countries['Name'].str.upper() == doc['Winner'].upper()].Code.values[0]}}/flat/24.png">
-						<a href="/results/player/{{doc['Winner']}}">{{doc['Winner']}}</a>  ({{doc['WRank']}})<br>
-						<img src="https://www.countryflags.io/{{countries[countries['Name'].str.upper() == doc['Loser'].upper()].Code.values[0]}}/flat/24.png">
-						<a href="/results/player/{{doc['Loser']}}">{{doc['Loser']}}</a>  ({{doc['LRank']}}) {% if doc['Comment'] == 'Retired'%} (Ret.) {% endif %}
-					</td>
-					<td class="text-center">{{doc['Surface']}}</td>
-					<td class="text-center">{{doc['Court']}}</td>
-					<td>
-						{% if (doc['W1'] | string) | length > 0 %}
-							{% for i in range(1, 6): %}
-								{% set w = 'W' ~ i %} 
-								{% set l = 'L' ~ i %}
-								{% if (doc[w] | string) | length > 0 %}
-									<div class="score text-center">
-										{% if pd.to_numeric(doc[w]) > pd.to_numeric(doc[l])%}
-											<b>{{doc[w]}}</b>
-										{% else %}
-											{{doc[w]}}
-										{% endif %}
-									</div>
-								{% endif %}
-							{% endfor %}
-						{% else %}
-							Data unavailable.
-						{% endif %}
-						<br>
-						{% if (doc['L1'] | string) | length > 0 %}
-							{% for i in range(1, 6): %}
-								{% set w = 'W' ~ i %} 
-								{% set l = 'L' ~ i %}
-								{% if (doc[l] | string) | length > 0 %}
-									<div class="score text-center">
-										{% if pd.to_numeric(doc[l]) > pd.to_numeric(doc[w])%}
-											<b>{{doc[l]}}</b>
-										{% else %}
-											{{doc[l]}}
-										{% endif %}
-									</div>
-								{% endif %}
-							{% endfor %}
-						{% else %}
-							Data unavailable.
-						{% endif %}
-					<td class="text-center">{{doc['Round']}}</td>
-				</tr>
+				{% for index, doc in data.head(2500).iterrows():%}
+					<tr>
+						<td class="text-center"><a href="/results/location/{{doc['Location']}}">{{doc['Location']}}</a><br>({{doc['Series']}})</td>
+						<td class="text-center">{{doc['Date']}}</td>
+						<td>
+							<img src="https://www.countryflags.io/{{countries[countries['Name'].str.upper() == doc['Winner'].upper()].Code.values[0]}}/flat/24.png">
+							<a href="/results/player/{{doc['Winner']}}">{{doc['Winner']}}</a>  
+							{% if doc['WRank'] != '' %}
+								({{doc['WRank']}}) 
+							{% else %}
+								(NA) 
+							{% endif %}<br>
+							<img src="https://www.countryflags.io/{{countries[countries['Name'].str.upper() == doc['Loser'].upper()].Code.values[0]}}/flat/24.png">
+							<a href="/results/player/{{doc['Loser']}}">{{doc['Loser']}}</a>  
+							{% if doc['LRank'] != '' %}
+								({{doc['LRank']}}) 
+							{% else %}
+								(NA) 
+							{% endif %} {% if doc['Comment'] == 'Retired'%} (Ret.) {% endif %}
+						</td>
+						<td class="text-center">{{doc['Surface']}}</td>
+						<td class="text-center">{{doc['Court']}}</td>
+						<td>
+							{% if (doc['W1'] | string) | length > 0 %}
+								{% for i in range(1, 6): %}
+									{% set w = 'W' ~ i %} 
+									{% set l = 'L' ~ i %}
+									{% if (doc[w] | string) | length > 0 %}
+										<div class="score text-center">
+											{% if pd.to_numeric(doc[w]) > pd.to_numeric(doc[l])%}
+												<b>{{doc[w]}}</b>
+											{% else %}
+												{{doc[w]}}
+											{% endif %}
+										</div>
+									{% endif %}
+								{% endfor %}
+							{% else %}
+								Data unavailable.
+							{% endif %}
+							<br>
+							{% if (doc['L1'] | string) | length > 0 %}
+								{% for i in range(1, 6): %}
+									{% set w = 'W' ~ i %} 
+									{% set l = 'L' ~ i %}
+									{% if (doc[l] | string) | length > 0 %}
+										<div class="score text-center">
+											{% if pd.to_numeric(doc[l]) > pd.to_numeric(doc[w])%}
+												<b>{{doc[l]}}</b>
+											{% else %}
+												{{doc[l]}}
+											{% endif %}
+										</div>
+									{% endif %}
+								{% endfor %}
+							{% else %}
+								Data unavailable.
+							{% endif %}
+						<td class="text-center">{{doc['Round']}}</td>
+					</tr>
 				{% endfor %}
 			</tbody>
 		</table>
@@ -140,8 +155,9 @@
 				  		label: '{{surface.upper()}}',
 				    	data: [
 				    		{%for i in years:%}
-				    			{%if data[data['Date'].str[-4:] == i] | length > 0 %}
-				    				{{data[data['Date'].str[-4:] == i]  | length}},
+				    			{% set year_sub = data[data['Date'].str[-4:] == i] | length %}
+				    			{%if year_sub > 0 %}
+				    				{{year_sub}},
 				    			{%else%}
 				    				0,
 				    			{%endif%}
@@ -173,7 +189,7 @@
 				}
 			});
 		{%endif%}
-		var ctx2 = document.getElementById('chart2').getContext('2d');
+ 		var ctx2 = document.getElementById('chart2').getContext('2d');
 		const chart2 = new Chart(ctx2, {
 			type: 'bar',
 			data: 
