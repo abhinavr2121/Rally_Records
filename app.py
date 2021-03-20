@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 client = pymongo.MongoClient("mongodb+srv://normal-user:7Pv02lHlo3Dzdxai@cluster0.ro0mt.mongodb.net/RacquetStats?retryWrites=true&w=majority")
 db = client.RacquetStats
-collection = db.Stats
+collection = db.ATP
 
 countries = pd.read_csv('data/countries.csv')
 
