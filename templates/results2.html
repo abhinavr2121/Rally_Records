@@ -48,7 +48,11 @@
 			<div class="row">
 				<div class="col">
 					<h3>{{p1_win | length}} - {{p1_loss | length}} 
-					({{(100 * (p1_win | length) / ((p1_win | length) + (p1_loss | length))) | round_number}}% win rate)</h3>
+					({{(100 * (p1_win | length) / ((p1_win | length) + (p1_loss | length))) | round_number}}% win rate)
+					{% if country | length > 0 %}
+						vs. players from {{country}}.
+					{% endif %}
+				</h3>
 				</div>
 			</div>
 			<div class="row">
@@ -275,9 +279,11 @@
 			{
 				labels: [
 					{%for i in range(6):%}
-						{%if data["Loser"].value_counts().index[i].upper() != name1.upper()%}
-						'{{data["Loser"].value_counts().index[i]}}',
-						{%endif%}
+						{% if i < data["Loser"].value_counts().index | length %}
+							{%if data["Loser"].value_counts().index[i].upper() != name1.upper()%}
+							'{{data["Loser"].value_counts().index[i]}}',
+							{% endif %}
+						{% endif %}
 					{%endfor%}
 				],
 			  	datasets: [
@@ -285,9 +291,11 @@
 			  		{
 				    	data: [
 				    	{%for i in range(6):%}
-				    		{%if data["Loser"].value_counts().index[i].upper() != name1.upper()%}
-				    			{{data["Loser"].value_counts()[i]}},
-				    		{%endif%}
+				    		{% if i < data["Loser"].value_counts().index | length %}
+				    			{%if data["Loser"].value_counts().index[i].upper() != name1.upper()%}
+				    				{{data["Loser"].value_counts()[i]}},
+				    			{%endif%}
+				    		{% endif %}
 				    	{%endfor%}
 				    	],
 				    	backgroundColor: '#FE8534',

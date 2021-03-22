@@ -73,6 +73,10 @@ def get_results(player = None, location = None):
 		results = pd.DataFrame(list(collection.find(query)))
 		if len(country) > 0:
 			nationality = countries[countries['Country'] == country].Name.values
+			nationality_cap = [s.upper() for s in nationality]
+			if p1.upper() in nationality_cap:
+				rem = nationality_cap.index(p1.upper())
+				nationality = np.delete(nationality, rem)
 			results = results[results['Winner'].isin(nationality) | results['Loser'].isin(nationality)]
 		if len(results) > 0:
 			results['Date'] = pd.to_datetime(results['Date'], format = '%m/%d/%Y')
@@ -111,6 +115,7 @@ def get_results(player = None, location = None):
 									re = re,
 									math = math,
 									location = location,
+									country = country,
 									countries = countries,
 									year = years,
 									years = map(str, range(2005, 2022)),
@@ -221,4 +226,4 @@ app.register_error_handler(500, handle_500)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port = port)
+    app.run(host = '0.0.0.0', port = port)
