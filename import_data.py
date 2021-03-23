@@ -4,7 +4,8 @@ import pymongo
 
 client = pymongo.MongoClient("mongodb+srv://normal-user:7Pv02lHlo3Dzdxai@cluster0.ro0mt.mongodb.net/RacquetStats?retryWrites=true&w=majority")
 db = client.RacquetStats
-collection = db.Stats
+collection = db.ATP
+#collection = db.WTA
 
 distinct_winners = pd.DataFrame(list(collection.distinct('Winner')))
 distinct_losers = pd.DataFrame(list(collection.distinct('Loser')))

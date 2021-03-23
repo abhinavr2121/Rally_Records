@@ -7,3 +7,4 @@
 - dropdown on player page for locations/similar players/surfaces
 
 - title counts
+- export to csv function
