@@ -13,22 +13,23 @@ app = Flask(__name__)
 client = pymongo.MongoClient("mongodb+srv://normal-user:7Pv02lHlo3Dzdxai@cluster0.ro0mt.mongodb.net/RacquetStats?retryWrites=true&w=majority")
 db = client.RacquetStats
 collection = db.ATP
-
 countries = pd.read_csv('data/countries.csv')
+global mode
 
 @app.route('/')
 def main_root():
-	distinct_winners = pd.DataFrame(list(collection.distinct('Winner')))
-	distinct_losers = pd.DataFrame(list(collection.distinct('Loser')))
-
+	mode = 'ATP'
 	distinct_countries = countries['Country'].unique().tolist()
-	distinct_locations = pd.DataFrame(list(collection.distinct('Location')))
-	distinct_players = pd.concat([distinct_winners, distinct_losers])
+	distinct_names = countries['Name'].unique().tolist()
 
-	names = distinct_players[0].unique().tolist()
-	locations = distinct_locations[0].unique().tolist()
+	distinct_locations_men = pd.DataFrame(list(db.ATP.distinct('Location')))
+	distinct_locations_women = pd.DataFrame(list(db.WTA.distinct('Location')))
+	all_locations = pd.concat([distinct_locations_men, distinct_locations_women])
+
+	locations = all_locations[0].unique().tolist()
+
 	return render_template('index.html', 
-							names = names, 
+							names = distinct_names, 
 							surface = ['Hard', 'Clay', 'Grass', 'Carpet'],
 							locations = locations,
 							countries = distinct_countries)
@@ -38,15 +39,21 @@ def main_root():
 @app.route('/results/player/<player>/', methods = ['POST', 'GET'])
 def get_results(player = None, location = None):
 	if request.method == 'POST':
+		if request.form.get('data-source') == 'WTA':
+			collection = db.WTA
+			mode = 'WTA'
+		else:
+			collection = db.ATP
+			mode = 'ATP'
 		route = 0
-		p1 = request.form.get('p1').capitalize()
-		p2 = request.form.get('p2').capitalize()
+		p1 = request.form.get('p1')
+		p2 = request.form.get('p2')
 		surface = request.form.get('surface').capitalize()
 		location = request.form.get('location').capitalize()
 		country = request.form.get('country').capitalize()
 		years = request.form.get('year')
+		
 		query = None
-
 		if len(p1) > 0 and len(p2) > 0: # two players
 			query = {'$and': [{'Winner': {'$regex': p1 + '|' + p2, '$options': 'i'}},
 							  {'Loser': {'$regex': p1 + '|' + p2, '$options': 'i'}},
@@ -69,8 +76,9 @@ def get_results(player = None, location = None):
 		else:
 			abort(401)
 
-		nationality = countries.Name.values
 		results = pd.DataFrame(list(collection.find(query)))
+
+		nationality = countries.Name.values
 		if len(country) > 0:
 			nationality = countries[countries['Country'] == country].Name.values
 			nationality_cap = [s.upper() for s in nationality]
@@ -78,6 +86,7 @@ def get_results(player = None, location = None):
 				rem = nationality_cap.index(p1.upper())
 				nationality = np.delete(nationality, rem)
 			results = results[results['Winner'].isin(nationality) | results['Loser'].isin(nationality)]
+
 		if len(results) > 0:
 			results['Date'] = pd.to_datetime(results['Date'], format = '%m/%d/%Y')
 			results = results.sort_values('Date', ascending = False)
@@ -92,6 +101,7 @@ def get_results(player = None, location = None):
 									name2 = p2, 
 									surface = surface,
 									location = location,
+									mode = mode,
 									year = years,
 									country = country,
 									countries = countries,
@@ -114,6 +124,7 @@ def get_results(player = None, location = None):
 									pd = pd,
 									re = re,
 									math = math,
+									mode = mode,
 									location = location,
 									country = country,
 									countries = countries,
@@ -128,6 +139,7 @@ def get_results(player = None, location = None):
 									time = time,
 									surface = surface,
 									location = location,
+									mode = mode,
 									nationality = nationality,
 									countries = countries,
 									country = country,
@@ -141,13 +153,22 @@ def get_results(player = None, location = None):
 	elif request.method == 'GET':
 		loc = location
 		p1 = player
-
+		if countries.loc[countries.Name == p1, 'Division'].values[0] == 'WTA':
+			collection = db.WTA
+			mode = 'WTA'
+		else:
+			collection = db.ATP
+			mode = 'ATP'
 		if p1 is not None:
 			query = {'$or': [{'Winner': {'$regex': player, '$options': 'i'}}, {'Loser': {'$regex': player, '$options': 'i'}}]}
 			results = pd.DataFrame(list(collection.find(query)))
 			results['Date'] = pd.to_datetime(results['Date'], format = '%m/%d/%Y')
 			results = results.sort_values('Date', ascending = False)
 			results['Date'] = results['Date'].dt.strftime('%m/%d/%Y')
+
+			space_index = [m.start() for m in re.finditer(" ", p1.upper())][-1]
+			last_name = p1[:space_index]
+			first_name = countries[countries['Name'].str.upper() == p1.upper()].First.values[0]
 
 			return render_template('results2.html', 
 										data = results,
@@ -156,6 +177,9 @@ def get_results(player = None, location = None):
 										pd = pd,
 										re = re,
 										math = math,
+										last_name = last_name,
+										mode = mode,
+										first_name = first_name,
 										countries = countries,
 										years = map(str, range(2005, 2022)),
 										p1_win = results[results['Winner'].str.upper() == (p1.upper())],
@@ -174,6 +198,7 @@ def get_results(player = None, location = None):
 										re = re,
 										math = math,
 										location = location,
+										mode = mode,
 										countries = countries,
 										surface = "",
 										years = map(str, range(2005, 2022)))

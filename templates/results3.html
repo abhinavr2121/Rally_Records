@@ -93,65 +93,82 @@
 			</tr>
 			<tbody>
 				{% for index, doc in data.head(2500).iterrows():%}
-					<tr>
-						<td class="text-center"><a href="/results/location/{{doc['Location']}}">{{doc['Location']}}</a><br>({{doc['Series']}})</td>
-						<td class="text-center">{{doc['Date']}}</td>
-						<td>
-							<img src="https://www.countryflags.io/{{countries[countries['Name'].str.upper() == doc['Winner'].upper()].Code.values[0]}}/flat/24.png">
-							<a href="/results/player/{{doc['Winner']}}">{{doc['Winner']}}</a>  
-							{% if doc['WRank'] != '' and doc['WRank'] > 0 %}
-								({{doc['WRank']}}) 
-							{% elif doc['WRank'] == 0 or doc['WRank'] == '' %}
-								(NA) 
-							{% endif %}<br>
-							<img src="https://www.countryflags.io/{{countries[countries['Name'].str.upper() == doc['Loser'].upper()].Code.values[0]}}/flat/24.png">
-							<a href="/results/player/{{doc['Loser']}}">{{doc['Loser']}}</a>  
-							{% if doc['LRank'] != '' and doc['LRank'] > 0 %}
-								({{doc['LRank']}}) 
-							{% elif doc['LRank'] == 0 or doc['LRank'] == '' %}
-								(NA) 
-							{% endif %} {% if doc['Comment'] == 'Retired'%} (Ret.) {% endif %}
-						</td>
-						<td class="text-center">{{doc['Surface']}}</td>
-						<td class="text-center">{{doc['Court']}}</td>
-						<td>
-							{% if (doc['W1'] | string) | length > 0 %}
-								{% for i in range(1, 6): %}
-									{% set w = 'W' ~ i %} 
-									{% set l = 'L' ~ i %}
-									{% if (doc[w] | string) | length > 0 %}
-										<div class="score text-center">
-											{% if pd.to_numeric(doc[w]) > pd.to_numeric(doc[l])%}
-												<b>{{doc[w]}}</b>
-											{% else %}
-												{{doc[w]}}
-											{% endif %}
-										</div>
-									{% endif %}
-								{% endfor %}
-							{% else %}
-								Data unavailable.
+				<tr>
+					<td class="text-center"><a href="/results/location/{{doc['Location']}}">{{doc['Location']}}</a><br>
+						{% if mode == 'ATP' %}
+							({{doc['Series']}})
+						{% elif mode == 'WTA' %}
+							({{doc['Tournament']}})
+						{% endif %}
+					</td>
+					<td class="text-center">{{doc['Date']}}</td>
+					<td>
+						<img src="https://www.countryflags.io/{{countries[countries['Name'].str.upper() == doc['Winner'].upper()].Code.values[0]}}/flat/24.png">
+						<a href="/results/player/{{doc['Winner']}}">{{doc['Winner']}}</a>  
+						{% if doc['WRank'] != '' and doc['WRank'] > 0 %}
+						({{doc['WRank'] | int}}) 
+						{% elif doc['WRank'] == 0 or doc['WRank'] == '' %}
+						(NA) 
+						{% endif %}<br>
+						<img src="https://www.countryflags.io/{{countries[countries['Name'].str.upper() == doc['Loser'].upper()].Code.values[0]}}/flat/24.png">
+						<a href="/results/player/{{doc['Loser']}}">{{doc['Loser']}}</a>  
+						{% if doc['LRank'] != '' and doc['LRank'] > 0 %}
+						({{doc['LRank'] | int}}) 
+						{% elif doc['LRank'] == 0 or doc['LRank'] == '' %}
+						(NA) 
+						{% endif %}
+						{% if doc['Comment'] == 'Retired'%} (Ret.) {% endif %}
+					</td>
+					<td class="text-center">{{doc['Surface']}}</td>
+					<td class="text-center">{{doc['Court']}}</td>
+					<td>
+						{% if (doc['W1'] | string) | length > 0 %}
+							{% if mode == 'ATP' %}
+								{% set scale = range(1, 6)%}
+							{% elif mode == 'WTA' %}
+								{% set scale = range(1, 4)%}
 							{% endif %}
-							<br>
-							{% if (doc['L1'] | string) | length > 0 %}
-								{% for i in range(1, 6): %}
-									{% set w = 'W' ~ i %} 
-									{% set l = 'L' ~ i %}
-									{% if (doc[l] | string) | length > 0 %}
-										<div class="score text-center">
-											{% if pd.to_numeric(doc[l]) > pd.to_numeric(doc[w])%}
-												<b>{{doc[l]}}</b>
-											{% else %}
-												{{doc[l]}}
-											{% endif %}
-										</div>
-									{% endif %}
-								{% endfor %}
-							{% else %}
-								Data unavailable.
+							{% for i in scale: %}
+								{% set w = 'W' ~ i %} 
+								{% set l = 'L' ~ i %}
+								{% if (doc[w] | string) | length > 0 %}
+									<div class="score text-center">
+										{% if pd.to_numeric(doc[w]) > pd.to_numeric(doc[l])%}
+											<b>{{doc[w]}}</b>
+										{% else %}
+											{{doc[w]}}
+										{% endif %}
+									</div>
+								{% endif %}
+							{% endfor %}
+						{% else %}
+							Data unavailable.
+						{% endif %}
+						<br>
+						{% if (doc['L1'] | string) | length > 0 %}
+							{% if mode == 'ATP' %}
+								{% set scale = range(1, 6)%}
+							{% elif mode == 'WTA' %}
+								{% set scale = range(1, 4)%}
 							{% endif %}
-						<td class="text-center">{{doc['Round']}}</td>
-					</tr>
+							{% for i in scale: %}
+								{% set w = 'W' ~ i %} 
+								{% set l = 'L' ~ i %}
+								{% if (doc[l] | string) | length > 0 %}
+									<div class="score text-center">
+										{% if pd.to_numeric(doc[l]) > pd.to_numeric(doc[w])%}
+											<b>{{doc[l]}}</b>
+										{% else %}
+											{{doc[l]}}
+										{% endif %}
+									</div>
+								{% endif %}
+							{% endfor %}
+						{% else %}
+							Data unavailable.
+						{% endif %}
+					<td class="text-center">{{doc['Round']}}</td>
+				</tr>
 				{% endfor %}
 			</tbody>
 		</table>

@@ -31,10 +31,16 @@
         <div class="container mt-5 text-center">
             <h1 class="display-1">RallyRecords<span class="sup">BETA</span></h1>
             <h3>The custom query-builder for tennis data.</h3>
-            <h6 class="text-muted">Coming soon: faster queries, WTA data, and more!</h6>
         </div>
         <div class="container mt-5">
             <form action="/results" method = 'POST'>
+                <div class="row">
+                    <div class="col pb-5">
+                        <select name='data-source' class="form-select" id='data-source'>
+                          <option selected value="ATP" class="text-muted">ATP Matches (2005 - 2021)</option>
+                          <option value="WTA" class="text-muted">WTA Matches (2007 - 2021)</option>
+                        </select>
+                    </div>
                 <div class="row">
                     <div class="col">
             		  <input type="text" placeholder="Player One" name="p1" class="names">
@@ -62,36 +68,11 @@
                 </div>
             </form>
         </div>
-        <div class="container carousel">
-            <div class="row mt-5">
-                <div class="col-md-8 offset-md-2">
-                    <div id="carouselExampleInterval" class="carousel-dark slide" data-bs-ride="carousel" data-bs-touch="false">
-                      <div class="carousel-inner">
-                        <div class="carousel-item active" data-bs-interval="3500">
-                          <h4 class="text-muted">[Nadal R.]'s record on [Clay] courts.</h4>
-                        </div>
-                        <div class="carousel-item" data-bs-interval="3500">
-                          <h4 class="text-muted">[2020]'s top performers on [Grass].</h4>
-                        </div>
-                        <div class="carousel-item" data-bs-interval="3500">
-                          <h4 class="text-muted">[Djokovic N.]'s career record.</h4>
-                        </div>
-                        <div class="carousel-item" data-bs-interval="3500">
-                          <h4 class="text-muted">Best performers at ATP [Madrid].</h4>
-                        </div>
-                        <div class="carousel-item" data-bs-interval="3500">
-                          <h4 class="text-muted">[Federer R.] vs. [Tsitsipas S.] head-to-head.</h4>
-                        </div>
-                      </div>
-                    </div>
-                </div>
-            </div>
-        </div>
         <footer class="navbar fixed-bottom bg-dark">
             <div class="container">
                 <div class="row w-100 text-center">
                     <div class="col">
-                        <span class="text-muted">Last updated March 14, 2021.</span>
+                        <span class="text-muted">ATP, WTA data last updated March 14, 2021.</span>
                     </div>
                     <div class="col">
                         <span class="text-muted">Results may contain a few inaccuracies.</span>
