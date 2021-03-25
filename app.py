@@ -48,9 +48,9 @@ def get_results(player = None, location = None):
 		route = 0
 		p1 = request.form.get('p1')
 		p2 = request.form.get('p2')
-		surface = request.form.get('surface').capitalize()
-		location = request.form.get('location').capitalize()
-		country = request.form.get('country').capitalize()
+		surface = request.form.get('surface')
+		location = request.form.get('location')
+		country = request.form.get('country')
 		years = request.form.get('year')
 		
 		query = None
@@ -77,16 +77,15 @@ def get_results(player = None, location = None):
 			abort(401)
 
 		results = pd.DataFrame(list(collection.find(query)))
-
 		nationality = countries.Name.values
 		if len(country) > 0:
 			nationality = countries[countries['Country'] == country].Name.values
-			nationality_cap = [s.upper() for s in nationality]
-			if p1.upper() in nationality_cap:
-				rem = nationality_cap.index(p1.upper())
-				nationality = np.delete(nationality, rem)
+			if len(p1) > 0:
+				nationality_cap = [s.upper() for s in nationality]
+				if p1.upper() in nationality_cap:
+					rem = nationality_cap.index(p1.upper())
+					nationality = np.delete(nationality, rem)
 			results = results[results['Winner'].isin(nationality) | results['Loser'].isin(nationality)]
-
 		if len(results) > 0:
 			results['Date'] = pd.to_datetime(results['Date'], format = '%m/%d/%Y')
 			results = results.sort_values('Date', ascending = False)

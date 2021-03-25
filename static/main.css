@@ -24,7 +24,7 @@ input {
 	text-align: center;
 	outline: 0;
 	border: none;
-	border-bottom: 2px dotted #053C5E;
+	border-bottom: 2px solid #053C5E;
 	font-size: 1.2em;
 	color: #053C5E;
 	background-color: transparent;
@@ -44,6 +44,12 @@ input {
 	background-color: #053C5E !important;
 	color: white !important;
 	border: none;
+}
+
+.alter {
+	color: #053C5E !important;
+	font-style: normal;
+	font-weight: bold;
 }
 
 .fixedHeight {
@@ -102,5 +108,5 @@ select {
 	background-color: transparent !important;
 	border: none !important;
 	border-radius: 0px !important;
-	border-bottom: 3px dotted #053C5E !important;
+	border-bottom: 2px solid #053C5E !important;
 }
