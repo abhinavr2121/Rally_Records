@@ -4,8 +4,8 @@ import pymongo
 
 client = pymongo.MongoClient("mongodb+srv://normal-user:7Pv02lHlo3Dzdxai@cluster0.ro0mt.mongodb.net/RacquetStats?retryWrites=true&w=majority")
 db = client.RacquetStats
-collection = db.ATP
-#collection = db.WTA
+#collection = db.ATP
+collection = db.WTA
 
 distinct_winners = pd.DataFrame(list(collection.distinct('Winner')))
 distinct_losers = pd.DataFrame(list(collection.distinct('Loser')))
@@ -13,8 +13,8 @@ distinct_losers = pd.DataFrame(list(collection.distinct('Loser')))
 distinct_players = pd.concat([distinct_winners, distinct_losers])
 distinct_names = distinct_players[0].unique().tolist()
 
-last_updated = '3/7/2021'
-new_data = pd.read_excel('data/new_data.xlsx')
+last_updated = '04/05/2021'
+new_data = pd.read_excel('data/wta.xlsx')
 
 # RULES
 new_data_winners = np.array(new_data['Winner'].unique())
