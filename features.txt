@@ -1,10 +1,5 @@
-- wta
-- country stats
 - loading times
 - design favicon
-- design logo
 - bubbles for win rate metric
-- dropdown on player page for locations/similar players/surfaces
 
-- title counts
 - export to csv function
