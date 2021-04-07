@@ -47,6 +47,9 @@ def find_different(dataset, group):
 	new_data_players = np.concatenate([new_data_losers, new_data_winners])
 	new_players = np.setdiff1d(new_data_players, distinct_names)
 
+	dataset.loc[dataset['WRank'] == 'N/A', 'WRank'] = ''
+	dataset.loc[dataset['LRank'] == 'N/A', 'LRank'] = ''
+
 	print('Unrecognized names (' + group + '): ' + ', '.join(new_players))
 
 	for n in new_players:
