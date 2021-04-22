@@ -1,5 +1,0 @@
-- loading times
-- design favicon
-- bubbles for win rate metric
-
-- export to csv function

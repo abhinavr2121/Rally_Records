@@ -30,6 +30,34 @@ input {
 	background-color: transparent;
 }
 
+.box {
+	background-color: #053C5E;
+	border-left: 1px solid #FE8534;
+	border-top: 1px solid #FE8534;
+	border-bottom: 1px solid #FE8534;
+	color: white;
+	padding: 1%;
+}
+
+.box .last {
+	border-right: 1px solid #FE8534;
+}
+
+.box p {
+	text-align: left;
+	font-size: 0.8em;
+	margin-top: 0;
+	padding-top: 0;
+	padding-left: 0;
+	margin-top: 0;
+	font-family: 'Roboto Slab';
+}
+
+.box h3 {
+	text-align: center;
+	vertical-align: bottom;
+}
+
 .bg-primary {
 	background-color: #053C5E !important;
 }

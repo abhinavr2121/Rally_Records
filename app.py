@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, abort
+from flask import Flask, render_template, request, abort, redirect, url_for
 import pymongo
 import pandas as pd
 import json
 import time
+import datetime
 import re
 import math
 import numpy as np
@@ -12,198 +13,162 @@ app = Flask(__name__)
 
 client = pymongo.MongoClient("mongodb+srv://normal-user:7Pv02lHlo3Dzdxai@cluster0.ro0mt.mongodb.net/RacquetStats?retryWrites=true&w=majority")
 db = client.RacquetStats
+
+stats_collection = db.Stats
+
 collection = db.ATP
 countries = pd.read_csv('data/countries.csv')
-global mode
+
+distinct_locations = pd.concat([pd.DataFrame(list(db.ATP.distinct('Location'))), 
+					 pd.DataFrame(list(db.WTA.distinct('Location')))])[0].unique().tolist()
+distinct_names = countries['Name'].unique().tolist()
+distinct_years = list(range(2005, 2022))
+distinct_countries = countries['Country'].unique().tolist()
+distinct_surfaces = ['Hard', 'Clay', 'Grass', 'Carpet']
+
 
 @app.route('/')
 def main_root():
-	mode = 'ATP'
-	distinct_countries = countries['Country'].unique().tolist()
-	distinct_names = countries['Name'].unique().tolist()
-
-	distinct_locations_men = pd.DataFrame(list(db.ATP.distinct('Location')))
-	distinct_locations_women = pd.DataFrame(list(db.WTA.distinct('Location')))
-	all_locations = pd.concat([distinct_locations_men, distinct_locations_women])
-
-	locations = all_locations[0].unique().tolist()
-
 	return render_template('index.html', 
 							names = distinct_names, 
-							surface = ['Hard', 'Clay', 'Grass', 'Carpet'],
-							locations = locations,
+							surface = distinct_surfaces,
+							locations = distinct_locations,
 							countries = distinct_countries)
 
-@app.route('/results/', methods = ['POST', 'GET'])
-@app.route('/results/location/<location>', methods = ['POST', 'GET'])
-@app.route('/results/player/<player>/', methods = ['POST', 'GET'])
-def get_results(player = None, location = None):
-	if request.method == 'POST':
-		if request.form.get('data-source') == 'WTA':
-			collection = db.WTA
-			mode = 'WTA'
-		else:
-			collection = db.ATP
-			mode = 'ATP'
-		route = 0
-		p1 = request.form.get('p1')
-		p2 = request.form.get('p2')
-		surface = request.form.get('surface')
-		location = request.form.get('location')
-		country = request.form.get('country')
-		years = request.form.get('year')
-		
-		query = None
-		if len(p1) > 0 and len(p2) > 0: # two players
-			query = {'$and': [{'Winner': {'$regex': p1 + '|' + p2, '$options': 'i'}},
-							  {'Loser': {'$regex': p1 + '|' + p2, '$options': 'i'}},
-							  {'Surface': {'$regex': surface,'$options': 'i'}},
-							  {'Location': {'$regex': location, '$options': 'i'}},
-							  {'Date': {'$regex': '.*' + years + '.*', '$options': 'i'}}]}
-			route = 1
-		elif len(p1) > 0 and len(p2) == 0: # one player
-			query = {'$and': [{'$or': [{'Winner': {'$regex': p1, '$options': 'i'}},
-							 {'Loser': {'$regex': p1, '$options': 'i' }}]},
-							 {'Surface': {'$regex': surface, '$options': 'i'}},
-							 {'Location': {'$regex': location, '$options': 'i'}},
-							 {'Date': {'$regex': '.*' + years + '.*', '$options': 'i'}}]}
-			route = 2
-		elif len(p1) == 0 and len(p2) == 0 and (len(surface) > 0 or len(location) > 0 or len(years) > 0 or len(country) > 0):
-			query = {'$and': [{'Surface': {'$regex': surface}},
-							  {'Location': {'$regex': location, '$options': 'i'}},
-							  {'Date': {'$regex': '.*' + years + '.*', '$options': 'i'}}]}
-			route = 3
-		else:
-			abort(401)
+@app.route('/process/', methods = ['POST'])
+def create_url():
+	group = request.form.get('data-source')
+	p1 = request.form.get('p1')
+	p2 = request.form.get('p2')
+	surface = request.form.get('surface')
+	location = request.form.get('location')
+	country = request.form.get('country')
+	year = request.form.get('year')
+	
+	p1 = set_none(p1)
+	p2 = set_none(p2)
+	surface = set_none(surface)
+	location = set_none(location)
+	country = set_none(country)
+	year = set_none(year)
 
-		results = pd.DataFrame(list(collection.find(query)))
-		nationality = countries.Name.values
-		if len(country) > 0:
-			nationality = countries[countries['Country'] == country].Name.values
-			if len(p1) > 0:
-				nationality_cap = [s.upper() for s in nationality]
-				if p1.upper() in nationality_cap:
-					rem = nationality_cap.index(p1.upper())
-					nationality = np.delete(nationality, rem)
-			results = results[results['Winner'].isin(nationality) | results['Loser'].isin(nationality)]
-		if len(results) > 0:
-			results['Date'] = pd.to_datetime(results['Date'], format = '%m/%d/%Y')
-			results = results.sort_values('Date', ascending = False)
-			results['Date'] = results['Date'].dt.strftime('%m/%d/%Y')
-		else:
-			abort(404)
+	url = '/results' + '/group=' + group + '/p1=' + p1 + '/p2=' + p2 + '/surface=' + surface + '/location=' + location + '/country=' + country + '/year=' + year
+	
+	return redirect(url)
 
-		if route == 1:
-			return render_template('results1.html', 
-									data = results, 
-									name1 = p1, 
-									name2 = p2, 
-									surface = surface,
-									location = location,
-									mode = mode,
-									year = years,
-									country = country,
-									countries = countries,
-									years = map(str, range(2005, 2022)),
-									np = np,
-									pd = pd,
-									math = math,
-									p1 = results[results['Winner'].str.upper() == (p1.upper())],
-									p2 = results[results['Winner'].str.upper() == (p2.upper())])
-		elif route == 2:
-			space_index = [m.start() for m in re.finditer(" ", p1.upper())][-1]
-			last_name = p1[:space_index]
-			first_name = countries[countries['Name'].str.upper() == p1.upper()].First.values[0]
-			return render_template('results2.html', 
-									data = results,
-									name1 = p1,
-									first_name = first_name,
-									last_name = last_name,
-									np = np,
-									pd = pd,
-									re = re,
-									math = math,
-									mode = mode,
-									location = location,
-									country = country,
-									countries = countries,
-									year = years,
-									years = map(str, range(2005, 2022)),
-									surface = surface,
-									p1_win = results[results['Winner'].str.upper() == (p1.upper())],
-									p1_loss = results[results['Loser'].str.upper() == (p1.upper())])
-		elif route == 3:
-			return render_template('results3.html',
-									data = results,
-									time = time,
-									surface = surface,
-									location = location,
-									mode = mode,
-									nationality = nationality,
-									countries = countries,
-									country = country,
-									year = years,
-									years = map(str, range(2005, 2022)),
-									np = np,
-									pd = pd,
-									math = math)
-		else:
-			abort(401)
-	elif request.method == 'GET':
-		loc = location
-		p1 = player
-		if countries.loc[countries.Name == p1, 'Division'].values[0] == 'WTA':
-			collection = db.WTA
-			mode = 'WTA'
-		else:
-			collection = db.ATP
-			mode = 'ATP'
-		if p1 is not None:
-			query = {'$or': [{'Winner': {'$regex': player, '$options': 'i'}}, {'Loser': {'$regex': player, '$options': 'i'}}]}
-			results = pd.DataFrame(list(collection.find(query)))
-			results['Date'] = pd.to_datetime(results['Date'], format = '%m/%d/%Y')
-			results = results.sort_values('Date', ascending = False)
-			results['Date'] = results['Date'].dt.strftime('%m/%d/%Y')
 
-			space_index = [m.start() for m in re.finditer(" ", p1.upper())][-1]
-			last_name = p1[:space_index]
-			first_name = countries[countries['Name'].str.upper() == p1.upper()].First.values[0]
+@app.route('/results/group=<group>/p1=<p1>/p2=<p2>/surface=<surface>/location=<location>/country=<country>/year=<year>/')
+def results(group, p1, p2, surface, location, country, year):
 
-			return render_template('results2.html', 
-										data = results,
-										name1 = p1,
-										np = np,
-										pd = pd,
-										re = re,
-										math = math,
-										last_name = last_name,
-										mode = mode,
-										first_name = first_name,
-										countries = countries,
-										years = map(str, range(2005, 2022)),
-										p1_win = results[results['Winner'].str.upper() == (p1.upper())],
-										p1_loss = results[results['Loser'].str.upper() == (p1.upper())])
-		elif loc is not None:
-			query = {'Location': loc}
-			results = pd.DataFrame(list(collection.find(query)))
-			results['Date'] = pd.to_datetime(results['Date'], format = '%m/%d/%Y')
-			results = results.sort_values('Date', ascending = False)
-			results['Date'] = results['Date'].dt.strftime('%m/%d/%Y')
-			return render_template('results3.html', 
-										data = results,
-										name1 = p1,
-										np = np,
-										pd = pd,
-										re = re,
-										math = math,
-										location = location,
-										mode = mode,
-										countries = countries,
-										surface = "",
-										years = map(str, range(2005, 2022)))
+	stat_obj = {"timestamp": datetime.datetime.now()}
+	arb = stats_collection.insert_one(stat_obj)
 
+	mode = 'ATP'
+	if group == 'WTA':
+		collection = db.WTA
+		mode = 'WTA'
 	else:
+		collection = db.ATP
+		mode = 'ATP'
+		
+	p1 = check_none(p1)
+	p2 = check_none(p2)
+	surface = check_none(surface)
+	location = check_none(location)
+	country = check_none(country)
+	year = check_none(year)
+
+	query = {'$and': []}
+
+	if p1 is not None and p2 is not None:
+		query['$and'].append({'Winner': {'$regex': p1 + '|' + p2, '$options': 'i'}})
+		query['$and'].append({'Loser': {'$regex': p1 + '|' + p2, '$options': 'i'}})
+
+	elif p1 is not None and p2 is None:
+		query['$and'].append({'$or': [
+								{'Winner': {'$regex': p1, '$options': 'i'}},
+								{'Loser': {'$regex': p1, '$options': 'i' }}
+							]})
+
+	if any(l is not None for l in [surface, location, country, year]):
+		if surface is not None:
+			query['$and'].append({'Surface': {'$regex': surface, '$options': 'i'}})
+		
+		if location is not None:
+			query['$and'].append({'Location': {'$regex': location, '$options': 'i'}})
+
+		if year is not None:
+			query['$and'].append({'Date': {'$regex': '.*' + str(year) + '.*', '$options': 'i'}})
+
+		if country is not None and p1 is None:
+			query = {}
+
+	results = pd.DataFrame(list(collection.find(query)))
+	nationality = countries.Name.values
+	if country is not None:
+		nationality = countries[countries['Country'] == country].Name.values
+		if p1 is not None:
+			nationality_cap = [s.upper() for s in nationality]
+			if p1.upper() in nationality_cap:
+				rem = nationality_cap.index(p1.upper())
+				nationality = np.delete(nationality, rem)
+		results = results[results['Winner'].isin(nationality) | results['Loser'].isin(nationality)]
+
+	if len(results) == 0:
 		abort(404)
+	
+	results['Date'] = pd.to_datetime(results['Date'], format = '%m/%d/%Y')
+	results = results.sort_values('Date', ascending = False)
+	results['Date'] = results['Date'].dt.strftime('%m/%d/%Y')
+
+	tailored_locations = results['Location'].value_counts()
+	tailored_years = pd.to_datetime(results['Date'], format = '%m/%d/%Y').dt.year.value_counts().index
+
+	first_name = 'none'
+	last_name = 'none'
+	if p1 is not None and p2 is None:
+		space_index = [m.start() for m in re.finditer(" ", p1.upper())][-1]
+		last_name = p1[:space_index]
+		first_name = countries[countries['Name'].str.upper() == p1.upper()].First.values[0]
+
+	p1 = set_none(p1)
+	p2 = set_none(p2)
+	surface = set_none(surface)
+	location = set_none(location)
+	country = set_none(country)
+	year = set_none(year)
+
+	return render_template('results.html',
+		data = results,
+		distinct_surfaces = distinct_surfaces,
+		distinct_locations = tailored_locations.index.tolist(),
+		distinct_years = np.sort(tailored_years),
+		referrer = request.headers.get('Referer'),
+		name1 = p1,
+		name2 = p2,
+		surface = surface,
+		location = location,
+		mode = mode,
+		year = year,
+		country = country,
+		countries = countries,
+		years = map(str, range(2005, 2022)),
+		np = np,
+		pd = pd,
+		math = math,
+		p1 = results[results['Winner'].str.upper() == (p1.upper())],
+		p2 = results[results['Winner'].str.upper() == (p2.upper())],
+		first_name = first_name,
+		last_name = last_name,
+		p1_win = results[results['Winner'].str.upper() == (p1.upper())],
+		p1_loss = results[results['Loser'].str.upper() == (p1.upper())],
+		nationality = nationality,
+		time = time)
+
+@app.route('/group/<group>/player/<player>/', methods = ['GET'])
+def reroute(group, player):
+	url = '/results' + '/group=' + group + '/p1=' + player + '/p2=none/surface=none/location=none/country=none/year=none/'
+	return redirect(url)
 
 @app.route('/about')
 def serve_about():
@@ -215,9 +180,9 @@ def serve_changelog():
 
 @app.after_request
 def add_header(response):
-    response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
-    response.headers['Cache-Control'] = 'public, max-age=0'
-    return response
+	response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+	response.headers['Cache-Control'] = 'public, max-age=0'
+	return response
 
 @app.template_filter()
 def debug(text):
@@ -234,20 +199,35 @@ def round_number(number):
 
 def handle_401(e):
 	return render_template('errors.html',
-							message = 'No parameters were entered.')
+							message = 'No parameters were entered.',
+							referrer = request.headers.get('Referer'))
 
 def handle_404(e):
 	return render_template('errors.html',
-							message = 'There were no "matches" for those parameters!')
+							message = 'There were no "matches" for those parameters!',
+							referrer = request.headers.get('Referer'))
 
 def handle_500(e):
 	return render_template('errors.html',
-							message = "Something went wrong. It's our fault, not yours.")
+							message = "Something went wrong. It's our fault, not yours.",
+							referrer = request.headers.get('Referer'))
+
+def set_none(variable):
+	if variable is None or len(variable) == 0:
+		return 'none'
+	else:
+		return variable
+
+def check_none(variable):
+	if variable == 'none':
+		return None
+	else:
+		return variable
 
 app.register_error_handler(401, handle_401)
 app.register_error_handler(404, handle_404)
 app.register_error_handler(500, handle_500)
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host = '0.0.0.0', port = port)
+	port = int(os.environ.get('PORT', 5000))
+	app.run(host = '0.0.0.0', port = port)

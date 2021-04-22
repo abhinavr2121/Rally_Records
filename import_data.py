@@ -11,7 +11,7 @@ init(autoreset = True)
 client = pymongo.MongoClient("mongodb+srv://normal-user:7Pv02lHlo3Dzdxai@cluster0.ro0mt.mongodb.net/RacquetStats?retryWrites=true&w=majority")
 db = client.RacquetStats
 
-last_updated = '2021-04-05'
+last_updated = '2021-04-21'
 
 print('Finding new matches since ' + last_updated + '...')
 
@@ -47,8 +47,8 @@ def find_different(dataset, group):
 	new_data_players = np.concatenate([new_data_losers, new_data_winners])
 	new_players = np.setdiff1d(new_data_players, distinct_names)
 
-	dataset.loc[dataset['WRank'] == 'N/A', 'WRank'] = ''
-	dataset.loc[dataset['LRank'] == 'N/A', 'LRank'] = ''
+	dataset.loc[dataset['WRank'] == 'N/A', 'WRank'] = 0
+	dataset.loc[dataset['LRank'] == 'N/A', 'LRank'] = 0
 
 	print('Unrecognized names (' + group + '): ' + ', '.join(new_players))
 
