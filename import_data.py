@@ -11,7 +11,7 @@ init(autoreset = True)
 client = pymongo.MongoClient("mongodb+srv://normal-user:7Pv02lHlo3Dzdxai@cluster0.ro0mt.mongodb.net/RacquetStats?retryWrites=true&w=majority")
 db = client.RacquetStats
 
-last_updated = '2021-04-21'
+last_updated = '2021-04-19'
 
 print('Finding new matches since ' + last_updated + '...')
 
