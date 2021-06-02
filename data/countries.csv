@@ -1,4 +1,16 @@
 Name,Country,Code,First,Division
+Borges N.,Portugal,pt,Nuno,ATP
+Brancaccio R.,Italy,it,Raul,ATP
+Cazaux A.,France,fr,Arthur,ATP
+Cobolli F.,Italy,it,Flavio,ATP
+Topo M.,Serbia,rs,Marko,ATP
+Bucsa C.,Spain,es,Cristina,WTA
+Hatouka Y.,Belarus,by,Yuliya,WTA
+Jimenez V.,Andorra,ad,Victoria,WTA
+Lazaro A.,Spain,es,Andrea,WTA
+Middendorf J.,Germany,de,Julia,WTA
+Medjedovic H.,Serbia,rs,Hamad,ATP
+Stricker D.,Switzerland,ch,Dominic Stephan,ATP
 Abanda F.,Canada,ca,Francoise,WTA
 Abdala N.,Mexico,mx,Nadia,WTA
 Abdulla M.,Qatar,qa,Mohammed,ATP
@@ -1353,6 +1365,8 @@ Ormaechea P.,Argentina,ar,Paula,WTA
 Ortega-Olmedo R.,Spain,es,Roberto,ATP
 Osaka M.,Japan,jp,Mari,WTA
 Osaka N.,Japan,jp,Naomi,WTA
+Pigato L.,Italy,it,Lisa,WTA
+Radivojevic L.,Serbia,rs,Lola,WTA
 Osorio Serrano M.C.,Colombia,co,Maria Camila,WTA
 Ostapenko J.,Latvia,lv,Jelena,WTA
 Osterloh L.,USA,us,Lilia,WTA
