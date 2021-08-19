@@ -1,16 +1,4 @@
 Name,Country,Code,First,Division
-Borges N.,Portugal,pt,Nuno,ATP
-Brancaccio R.,Italy,it,Raul,ATP
-Cazaux A.,France,fr,Arthur,ATP
-Cobolli F.,Italy,it,Flavio,ATP
-Topo M.,Serbia,rs,Marko,ATP
-Bucsa C.,Spain,es,Cristina,WTA
-Hatouka Y.,Belarus,by,Yuliya,WTA
-Jimenez V.,Andorra,ad,Victoria,WTA
-Lazaro A.,Spain,es,Andrea,WTA
-Middendorf J.,Germany,de,Julia,WTA
-Medjedovic H.,Serbia,rs,Hamad,ATP
-Stricker D.,Switzerland,ch,Dominic Stephan,ATP
 Abanda F.,Canada,ca,Francoise,WTA
 Abdala N.,Mexico,mx,Nadia,WTA
 Abdulla M.,Qatar,qa,Mohammed,ATP
@@ -29,6 +17,7 @@ Ahn K.,USA,us,Kristie,WTA
 Ahn K.H.,USA,us,Kristie,WTA
 Ahouda A.,Morocco,ma,Amine,ATP
 Aiava D.,Australia,au,Destanee,WTA
+Ajdukovic D.,Croatia,hr,Duje,ATP
 Aksu A.,Turkey,tr,Ayla,WTA
 Al Ghareeb M.,Kuwait,kw,Mohammed,ATP
 Al Mutawa J.,Qatar,qa,Jabor,ATP
@@ -69,6 +58,7 @@ Androic T.,Croatia,hr,Toni,ATP
 Andujar P.,Spain,es,Pablo,ATP
 Ani M.,Estonia,ee,Maret,WTA
 Anisimova A.,USA,us,Amanda,WTA
+Anshba A.,Russia,ru,Amina,WTA
 Antonitsch M.,Austria,at,Mira,WTA
 Antoniychuk K.,Ukraine,ua,Kristina,WTA
 Aoyama S.,Japan,jp,Shuko,WTA
@@ -100,6 +90,7 @@ Avidzba A.,Russia,ru,Alen,ATP
 Awadhy O.,UAE,ae,Omar,ATP
 Azarenka V.,Belarus,by,Victoria,WTA
 Azzaro L.,Italy,it,Leonardo,ATP
+Babel O.,France,fr,Oceane,WTA
 Babos T.,Hungary,hu,Timea,WTA
 Baccanello P.,Australia,au,Paul,ATP
 Bachinger M.,Germany,de,Matthias,ATP
@@ -123,6 +114,7 @@ Balleret B.,Monaco,mc,Benjamin,ATP
 Baltacha E.,Great Britain,gb,Elena,WTA
 Baluda V.,Russia,ru,Victor,ATP
 Bammer S.,Austria,at,Sybille,WTA
+Bandecchi S.,Switzerland,ch,Susanne,WTA
 Bangoura S.,USA,us,Sekou,ATP
 Baptiste H.,USA,us,Hailey,WTA
 Bara I.,Romania,ro,Irina,WTA
@@ -142,8 +134,10 @@ Barton M.,Australia,au,Matthew,ATP
 Barty A.,Australia,au,Ashleigh,WTA
 Basic M.,Bosnia and Herzegovina,ba,Mirza,ATP
 Basilashvili N.,Georgia,ge,Nikoloz,ATP
+Bassels Ribera M.,Spain,es,Marina,WTA
 Basso A.,Italy,it,Andrea,ATP
 Bastl G.,Switzerland,ch,George,ATP
+Baszak W.,Poland,pl,Weronika,WTA
 Batta L.,Hungary,hu,Lucia,WTA
 Bautista Agut R.,Spain,es,Roberto,ATP
 Beck A.,Germany,de,Andreas,ATP
@@ -154,6 +148,7 @@ Bedene A.,Slovenia,si,Alijaz,ATP
 Bega A.,Italy,it,Alessandro,ATP
 Begu I.,Romania,ro,Irina-Camelia,WTA
 Behrend T.,Germany,de,Tomas,ATP
+Bektas E.,USA,us,Emina,WTA
 Belic L.,Croatia,hr,Luka,ATP
 Bellier A.,Switzerland,ch,Antoine,ATP
 Bellis C.,USA,us,Catherine,WTA
@@ -181,6 +176,7 @@ Bester P.,Canada,ca,Philip,ATP
 Betov S.,Belarus,by,Sergey,ATP
 Beygelzimer Y.,Ukraine,ua,Yuliya,WTA
 Bhambri Y.,India,in,Yuki,ATP
+Bhatia R.,India,in,Riya,WTA
 Birnerova E.,Czech Republic,cz,Eva,WTA
 Birrell K.,Australia,au,Kimberly,WTA
 Biryukov M.,Russia,ru,Mikhail,ATP
@@ -205,7 +201,6 @@ Bohli S.,Switzerland,ch,Stephane,ATP
 Bohmova K.,Czech Republic,cz,Katerina,WTA
 Bolelli S.,Italy,it,Simone,ATP
 Bolkvadze M.,Georgia,ge,Mariam,WTA
-Parks A.,USA,us,Alycia,WTA
 Bolsova Zadoinov A.,Spain,es,Aliona,WTA
 Bolt A.,Australia,au,Alex,ATP
 Bona A.,Italy,it,Annalisa,WTA
@@ -215,6 +210,7 @@ Bondarenko A.,Ukraine,ua,Alona,WTA
 Bondarenko K.,Ukraine,ua,Kateryna,WTA
 Bonzi B.,France,fr,Benjamin,ATP
 Bopanna R.,India,in,Rohan,ATP
+Borges N.,Portugal,pt,Nuno,ATP
 Borsanyi C.,Hungary,hu,Csilla,WTA
 Borvanov R.,Moldova,md,Roman,ATP
 Boserup J.,USA,us,Julia,WTA
@@ -231,6 +227,8 @@ Bowles C.,USA,us,Clint,ATP
 Bozoljac I.,Serbia,rs,Ilija,ATP
 Bracciali D.,Italy,it,Daniele,ATP
 Brady J.,USA,us,Jennifer,WTA
+Brancaccio N.,Italy,it,Nuria,WTA
+Brancaccio R.,Italy,it,Raul,ATP
 Brandi K.,Puerto Rico,pr,Kristina,WTA
 Brands D.,Germany,de,Daniel,ATP
 Bratchikova N.,Russia,ru,Nina,WTA
@@ -243,14 +241,17 @@ Brizzi A.,Italy,it,Alberto,ATP
 Broady L.,Great Britain,gb,Liam,ATP
 Broady N.,Great Britain,gb,Naomi,WTA
 Brodsky G.,USA,us,Gail,WTA
+Bronzetti L.,Italy,it,Lucia,WTA
 Brooksby J.,USA,us,Jenson,ATP
 Brown D.,Germany,de,Dustin,ATP
 Brugues-Davi A.,Spain,es,Arnau,ATP
+Bryde T.,USA,us,Trent,ATP
 Brzezicki J.P.,Argentina,ar,Juan Pablo,ATP
 Bubka S.,Ukraine,ua,Sergei,ATP
 Bublik A.,Kazakhstan,kz,Alexander,ATP
 Buchanan C.,USA,us,Chase,ATP
 Buchina Y.,Russia,ru,Yana,WTA
+Bucsa C.,Spain,es,Cristina,WTA
 Bukta A.,Hungary,hu,Agnes,WTA
 Bulgaru M.,Romania,ro,Miriam,WTA
 Burdette M.,USA,us,Mallory,WTA
@@ -292,6 +293,7 @@ Castano C.,Colombia,co,Catalina,WTA
 Castiblanco K.,Colombia,co,Karen,WTA
 Catarina L.,Monaco,mc,Lucas,ATP
 Cavaday N.,Great Britain,gb,Naomi,WTA
+Cazaux A.,France,fr,Arthur,ATP
 Ce G.,Brazil,br,Gabriela,WTA
 Cecchinato M.,Italy,it,Marco,ATP
 Cecil M.,USA,us,Mallory,WTA
@@ -347,11 +349,13 @@ Clemens T.,Germany,de,Tobias,ATP
 Clement A.,France,fr,Arnaud,ATP
 Clezar G.,Brazil,br,Guilherme,ATP
 Clijsters K.,Belgium,be,Kim,WTA
+Cobolli F.,Italy,it,Flavio,ATP
 Cocciaretto E.,Italy,it,Elisabetta,WTA
 Cohen A.,USA,us,Audra Marie,WTA
 Cohen Aloro S.,France,fr,Stephanie,WTA
 Cohen J.,USA,us,Julia,WTA
 Coin J.,France,fr,Julie,WTA
+Collarini A.,Italy,it,Andrea,ATP
 Collins C.,USA,us,Courtney,WTA
 Collins D.,USA,us,Danielle,WTA
 Compostizo de Andres E.,Spain,es,Eloisa,WTA
@@ -436,6 +440,7 @@ Devvarman S.,India,in,Somdev,ATP
 Di Giuseppe M.,Italy,it,Martina,WTA
 Di Lorenzo F.,Italy,it,Francesca,WTA
 di Mauro A.,Italy,it,Alessio,ATP
+Di Sarra F.,Italy,it,Federica,WTA
 Diatchenko V.,Russia,ru,Vitalia,WTA
 Diaz Acosta F.,Argentina,ar,Facundo,ATP
 Diez S.,Canada,ca,Steven,ATP
@@ -515,6 +520,7 @@ Enqvist T.,Sweden,se,Thomas,ATP
 Erakovic M.,New Zealand,nz,Marina,WTA
 Eraydin B.,Turkey,tr,Basak,WTA
 Eriksson M.,Sweden,se,Markus,ATP
+Erler A.,Austria,at,Alexander,ATP
 Errani S.,Italy,it,Sara,WTA
 Eschauer W.,Austria,at,Werner,ATP
 Escobar G.,Ecuador,ec,Gonzalo,ATP
@@ -529,6 +535,7 @@ Evtimova D.,Bulgaria,bg,Dia,WTA
 Eysseric J.,France,fr,Jonathan,ATP
 Fabbiano T.,Italy,it,Thomas,ATP
 Falconi I.,USA,us,Irina,WTA
+Falkowska W.,Poland,pl,Weronika,WTA
 Falla A.,Colombia,co,Alejandro,ATP
 Fancutt T.,Australia,au,Thomas,ATP
 Farah R.,Colombia,co,Robert,ATP
@@ -686,6 +693,7 @@ Gregorc L.,Slovenia,si,Luka,ATP
 Gremelmayr D.,Germany,de,Denis,ATP
 Grenier H.,France,fr,Hugo,ATP
 Greul S.,Germany,de,Simon,ATP
+Grey S.,Great Britain,gb,Sarah Beth,WTA
 Griekspoor T.,Netherlands,nl,Tallon,ATP
 Grigelis L.,Lithuania,lt,Laurynas,ATP
 Groenefeld A.L.,Germany,de,Anna Lena,WTA
@@ -704,6 +712,7 @@ Gumulya S.,Indonesia,id,Sandy,WTA
 Gunneswaran P.,India,in,Prajnesh,ATP
 Guo H.,China,cn,Hanyu,WTA
 Guskova N.,Russia,ru,Nadejda,WTA
+Guth M.,Germany,de,Mara,WTA
 Gutierrez-Ferrol S.,Spain,es,Sergio,ATP
 Guzman J.P.,Argentina,ar,Juan Pablo,ATP
 Haas B.,Austria,at,Barbara,WTA
@@ -736,6 +745,8 @@ Harrison C.,USA,us,Christian,ATP
 Harrison C.,USA,us,Catherine,WTA
 Harrison R.,USA,us,Ryan,ATP
 Hartfield D.,Argentina,ar,Diego,ATP
+Hatouka Y.,Belarus,by,Yuliya,WTA
+Havlickova L.,Czech Republic,cz,Lucie,WTA
 Haynes A.,USA,us,Angela,WTA
 Healey N.,Australia,au,Nathan,ATP
 Hemery C.,France,fr,Calvin,ATP
@@ -837,6 +848,7 @@ Jenkins S.,USA,us,Scoville,ATP
 Jeong S.Y.,South Korea,kr,Yeong Seok,ATP
 Ji C.M.,China,cn,Chun-Mei,WTA
 Jidkova A.,Russia,ru,Alina,WTA
+Jimenez V.,Andorra,ad,Victoria,WTA
 Joao Koehler M.,Portugal,pt,Maria,WTA
 Johansson J.,Sweden,se,Joachim,ATP
 Johansson M.,France,fr,Mathilde,WTA
@@ -951,6 +963,7 @@ Konjuh A.,Croatia,hr,Ana,WTA
 Konta J.,Great Britain,gb,Johanna,WTA
 Kontaveit A.,Estonia,ee,Anett,WTA
 Kontinen H.,Finland,fi,Henry,ATP
+Kopriva V.,Czech Republic,cz,Vit,ATP
 Korashvili O.,Ukraine,ua,Oleksandra,WTA
 Korda S.,USA,us,Sebastian,ATP
 Korolev E.,Kazakhstan,kz,Evgeny,ATP
@@ -1039,6 +1052,7 @@ Lapushchenkova A.,Russia,ru,Anna,WTA
 Larcherde Brito M.,Portugal,pt,Michelle,WTA
 Larriere V.,France,fr,Victoria,WTA
 Larsson J.,Sweden,se,Johanna,WTA
+Lazaro A.,Spain,es,Andrea,WTA
 Lazarov A.,Bulgaria,bg,Alexandar,ATP
 Lazov A.,Bulgaria,bg,Alexandar,ATP
 Ledovskikh M.,Russia,ru,Mikhail,ATP
@@ -1191,9 +1205,11 @@ Mchale C.,USA,us,Christina,WTA
 Mcnally C.,USA,us,Catherine,WTA
 Mecir M.,Slovakia,sk,Miloslav,ATP
 Medina Garrigues A.,Spain,es,Anabel,WTA
+Medjedovic H.,Serbia,rs,Hamad,ATP
 Medvedev D.,Russia,ru,Daniil,ATP
 Meffert D.,Germany,de,Dominik,ATP
 Meister N.,USA,us,Nicolas,ATP
+Mejia N.,Colombia,co,Nicolas,ATP
 Mektic N.,Croatia,hr,Nikola,ATP
 Melander H.,Sweden,se,Hilda,WTA
 Melichar N.,USA,us,Nicole,WTA
@@ -1215,6 +1231,7 @@ Mestach A.S.,Belgium,be,An-Sophie,WTA
 Meusburger Y.,Austria,at,Yvonne,WTA
 Michon A.,France,fr,Axel,ATP
 Middelkoop M.,Netherlands,nl,Matwe,ATP
+Middendorf J.,Germany,de,Julia,WTA
 Miedler L.,Austria,at,Lucas,ATP
 Mijacika A.,Croatia,hr,Ani,WTA
 Mikadze T.,Georgia,ge,Tatia,WTA
@@ -1317,6 +1334,7 @@ Nedovyesov O.,Kazakhstan,kz,Oleksandr,ATP
 Nedunchezhiyan J.,India,in,Jeevan,ATP
 Nelson L.,USA,us,Lindsey,WTA
 Nestor D.,Canada,ca,Daniel,ATP
+Neumayer L.,Austria,at,Lukas,ATP
 Neuwirth Y.,Austria,at,Yvonne,WTA
 Ng K.Y.,Hong Kong,hk,Kuan Yau,WTA
 Niculescu M.,Romania,ro,Monica,WTA
@@ -1356,6 +1374,7 @@ Olejniczak D.,Poland,pl,Dawid,ATP
 Olivetti A.,France,fr,Albano,ATP
 Olivo R.,Argentina,ar,Renzo,ATP
 Olmos G.,Mexico,mx,Giuliana,WTA
+Olyanovskaya N.,Russia,ru,Nina,WTA
 Ondraskova Z.,Czech Republic,cz,Zuzana,WTA
 O'Neal J.,USA,us,Justin,ATP
 Opelka R.,USA,us,Reilly,ATP
@@ -1365,8 +1384,6 @@ Ormaechea P.,Argentina,ar,Paula,WTA
 Ortega-Olmedo R.,Spain,es,Roberto,ATP
 Osaka M.,Japan,jp,Mari,WTA
 Osaka N.,Japan,jp,Naomi,WTA
-Pigato L.,Italy,it,Lisa,WTA
-Radivojevic L.,Serbia,rs,Lola,WTA
 Osorio Serrano M.C.,Colombia,co,Maria Camila,WTA
 Ostapenko J.,Latvia,lv,Jelena,WTA
 Osterloh L.,USA,us,Lilia,WTA
@@ -1395,6 +1412,7 @@ Papamichail D.,Greece,gr,Despina,WTA
 Paquet C.,France,fr,Chloe,WTA
 Parada F.,Chile,cl,Felipe,ATP
 Park S.,South Korea,kr,Sohyun,WTA
+Parks A.,USA,us,Alycia,WTA
 Parmar A.,Great Britain,gb,Arvind,ATP
 Parmentier P.,France,fr,Pauline,WTA
 Parra Santonja A.,Spain,es,Arantxa,WTA
@@ -1452,6 +1470,7 @@ Philippoussis M.,Australia,au,Mark,ATP
 Piccari F.,Italy,it,Francesco,ATP
 Piedade F.,Portugal,pt,Frederica,WTA
 Pieri J.,Italy,it,Jessica,WTA
+Pigato L.,Italy,it,Lisa,WTA
 Pigossi L.,Brazil,br,Laura,WTA
 Pin C.,France,fr,Camille,WTA
 Pironkova T.,Bulgaria,bg,Tsvetana,WTA
@@ -1501,6 +1520,8 @@ Quiroz R.,Ecuador,ec,Roberto,ATP
 Qureshi A.U.H.,Pakistan,pk,Aisam Ul-Haq,ATP
 Rachidi Y.,Morocco,ma,Younes,ATP
 Radanovic D.,Serbia,rs,Dejana,WTA
+Radivojevic L.,Serbia,rs,Lola,WTA
+Raducanu E.,Great Britain,gb,Emma,WTA
 Radwanska A.,Poland,pl,Agnieszka,WTA
 Radwanska U.,Poland,pl,Urszula,WTA
 Raina A.,India,in,Ankita,WTA
@@ -1534,6 +1555,7 @@ Reyes-Varela M.A.,Mexico,mx,Miguel Angel,ATP
 Reynolds B.,USA,us,Bobby,ATP
 Rezai A.,France,fr,Aravane,WTA
 Riba P.,Spain,es,Pere,ATP
+Riedi L.,Switzerland,ch,Leandro,ATP
 Rieschick S.,Germany,de,Sebastian,ATP
 Rinderknech A.,France,fr,Arthur,ATP
 Rios F.,Chile,cl,Felipe,ATP
@@ -1699,6 +1721,7 @@ Siegemund L.,Germany,de,Laura,WTA
 Sijsling I.,Netherlands,nl,Igor,ATP
 Silva C.,Chile,cl,Camila,WTA
 Silva D.,Brazil,br,Daniel,ATP
+Silva E.,Great Britain,gb,Eden,WTA
 Silva F.F.,Portugal,pt,Frederico Ferreira,ATP
 Silva J.,Brazil,br,Julio,ATP
 Silva N.,Portugal,pt,Nueza,WTA
@@ -1773,6 +1796,7 @@ Stoop G.,Netherlands,an,Renate,WTA
 Stoppini A.,Italy,it,Andrea,ATP
 Stosur S.,Australia,au,Samantha,WTA
 Strakhova V.,Ukraine,ua,Valeriya,WTA
+Stricker D.,Switzerland,ch,Dominic Stephan,ATP
 Strode B.,USA,us,Blake,ATP
 Struff J.L.,Germany,de,Jan-Lennard,ATP
 Struvay E.,Colombia,co,Eduardo,ATP
@@ -1841,6 +1865,7 @@ Tomic B.,Australia,au,Bernard,ATP
 Tomljanovic A.,Australia,au,Ajla,WTA
 Tomova V.,Bulgaria,bg,Viktoriya,WTA
 Topic J.,Croatia,hr,Josko,ATP
+Topo M.,Serbia,rs,Marko,ATP
 Torebko P.,Germany,de,Peter,ATP
 Torpegaard M.,Denmark,dk,Mikael,ATP
 Torres Sandoval M.,Italy,it,Melissa,WTA
@@ -2009,6 +2034,7 @@ Yang T.H.,Chinese Taipei,tw,Tsung-Hua,ATP
 Yang Z.,China,cn,Ziyi,WTA
 Yang Zha.,China,cn,Zhaoxuan,WTA
 Yani M.,USA,us,Michael,ATP
+Yashina E.,Russia,ru,Ekaterina,WTA
 Yastremska D.,Ukraine,ua,Dayana,WTA
 Ymer E.,Sweden,se,Elias,ATP
 Ymer M.,Sweden,se,Mikael,ATP
@@ -2028,6 +2054,7 @@ Zabaleta M.,Argentina,ar,Mariano,ATP
 Zacarias M.,Mexico,mx,Marcela,WTA
 Zahlavova S.,Czech Republic,cz,Sandra,WTA
 Zaja A.,Germany,de,Anna,WTA
+Zakharova A.,Russia,ru,Anastasia,WTA
 Zampieri C.,Brazil,br,Caio,ATP
 Zander N.,Germany,de,Nina,WTA
 Zanevska M.,Belgium,be,Maryna,WTA
@@ -2054,6 +2081,7 @@ Zhang Zh.,China,cn,Zhizhen,ATP
 Zhao C.,Canada,cn,Carol,WTA
 Zhao Y.J.,China,cn,Yi-Jing,WTA
 Zheng J.,China,cn,Jie,WTA
+Zheng Q.,China,cn,Qinwen,WTA
 Zheng S.,China,cn,Sai-Sai,WTA
 Zheng W.,China,cn,Wushuang,WTA
 Zhou Y.M.,China,cn,Yi- Miao,WTA
