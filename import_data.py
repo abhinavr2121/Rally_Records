@@ -11,12 +11,12 @@ init(autoreset = True)
 client = pymongo.MongoClient("mongodb+srv://normal-user:7Pv02lHlo3Dzdxai@cluster0.ro0mt.mongodb.net/RacquetStats?retryWrites=true&w=majority")
 db = client.RacquetStats
 
-last_updated = '2022-01-20'
+last_updated = '2022-01-01'
 
 print('Finding new matches since ' + last_updated + '...')
 
-atp_url = 'http://www.tennis-data.co.uk/2021/2021.xlsx'
-wta_url = 'http://www.tennis-data.co.uk/2021w/2021.xlsx'
+atp_url = 'http://www.tennis-data.co.uk/2022/2022.xlsx'
+wta_url = 'http://www.tennis-data.co.uk/2022w/2022.xlsx'
 
 def formatter(url, group):
 	print('Downloading ' + group + ' file...')
@@ -62,8 +62,8 @@ def find_different(dataset, group):
 				matched_name = p
 		if max_ratio >= 90:
 			print(Fore.GREEN + 'REPLACING ' + n + ' with best match, ' + matched_name + ' (' + str(max_ratio) + '%)...')
-			dataset.loc[dataset['Winner'] == n, 'Winner'] = matched_name
-			dataset.loc[dataset['Loser'] == n, 'Loser'] = matched_name
+			# dataset.loc[dataset['Winner'] == n, 'Winner'] = matched_name
+			# dataset.loc[dataset['Loser'] == n, 'Loser'] = matched_name
 		else:
 			print(Fore.YELLOW + n + ' partially matched ' + matched_name + '(' + str(max_ratio) + '%), NOT REPLACING.')
 
