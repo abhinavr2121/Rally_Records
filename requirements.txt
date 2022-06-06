@@ -1,0 +1,7 @@
+pymongo==3.11.3
+streamlit==1.10.0
+plotly==5.8.0
+plotly-express==0.4.1
+pandas==1.0.3
+pandasql==0.7.3
+numpy==1.21.5
