@@ -182,4 +182,4 @@ else:
         else:
             st.table(results_display[['Date', 'Location', 'Tournament', 'Court', 'Surface', 'Round', 'Winner', 'Loser', 'Set 1', 'Set 2', 'Set 3', 'Comment']].astype(str).sort_values(by = "Date", ascending = False).reset_index(drop = True))
     st.write('Data may contain a few inaccuracies. Sourced from Tennis-Data.co.uk.')
-    st.write('Contained data spans 2005 - 2022. Last updated June 4th, 2022.')
+    st.write('Contained data spans 2005 - 2022. Last updated June 22nd, 2022.')
